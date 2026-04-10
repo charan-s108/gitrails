@@ -1,0 +1,41 @@
+name: git-write
+description: "Write or update files in the repository and stage them for commit. Only writes to the session branch. Blocked on protected branches."
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    file:
+      type: string
+      description: "Repository-relative file path to write"
+    content:
+      type: string
+      description: "Full file content to write"
+    mode:
+      type: string
+      enum: [create, append, prepend, replace]
+      description: "Write mode (default: replace)"
+    commit_message:
+      type: string
+      description: "Git commit message for this change"
+    branch:
+      type: string
+      description: "Branch to write to (must match session branch)"
+  required: [file, content, commit_message]
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+    commit_hash:
+      type: string
+    file:
+      type: string
+annotations:
+  requires_confirmation: true
+  read_only: false
+  cost: medium
+implementation:
+  type: script
+  path: hooks/scripts/pre-tool-audit.sh
+  runtime: bash
+  timeout: 10

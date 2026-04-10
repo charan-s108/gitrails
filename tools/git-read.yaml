@@ -1,0 +1,39 @@
+name: git-read
+description: "Read specific line ranges from repository files. Always use semantic-search first to get line ranges — never read full files unless under 50 lines."
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    file:
+      type: string
+      description: "Repository-relative file path"
+    start_line:
+      type: number
+      description: "First line to read (1-indexed)"
+    end_line:
+      type: number
+      description: "Last line to read (inclusive)"
+    ref:
+      type: string
+      description: "Git ref to read from (default: HEAD)"
+  required: [file]
+output_schema:
+  type: object
+  properties:
+    content:
+      type: string
+      description: "File content for the requested line range"
+    total_lines:
+      type: number
+      description: "Total lines in file"
+    ref:
+      type: string
+annotations:
+  requires_confirmation: false
+  read_only: true
+  cost: low
+implementation:
+  type: script
+  path: hooks/scripts/bootstrap.sh
+  runtime: bash
+  timeout: 5

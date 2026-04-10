@@ -1,0 +1,119 @@
+spec_version: "0.1.0"
+name: gitrails
+version: 1.0.0
+description: "Self-aware, learning engineering teammate — reviews PRs, scans security, generates docs, and grows smarter through human-approved memory and semantic code retrieval."
+author: gitrails-team
+license: MIT
+
+model:
+  preferred: google:gemini-2.5-flash
+  fallback:
+    - google:gemini-2.5-flash-lite
+  constraints:
+    temperature: 0.2
+    max_tokens: 8192
+
+tools:
+  - git-read
+  - git-write
+  - pr-comment
+  - audit-log
+  - semantic-search
+
+runtime:
+  max_turns: 50
+  timeout: 120
+
+skills:
+  - triage
+  - dispatch
+  - synthesize
+
+agents:
+  sentinel:
+    description: "Security scanner — OWASP A01-A09, secrets, dependencies"
+    delegation:
+      mode: auto
+  reviewer:
+    description: "Code quality reviewer — risk scoring, diff analysis, test suggestions"
+    delegation:
+      mode: auto
+  scribe:
+    description: "Documentation writer — changelog and module docs"
+    delegation:
+      mode: auto
+  mirror:
+    description: "Self-auditor — post-session accuracy review and learning proposals"
+    delegation:
+      mode: auto
+
+delegation:
+  mode: auto
+
+compliance:
+  risk_tier: high
+  supervision:
+    human_in_the_loop: conditional
+    escalation_triggers:
+      - confidence_below: 0.7
+      - action_type: git_commit
+      - action_type: pr_creation
+      - error_detected: true
+    override_capability: true
+    kill_switch: true
+  recordkeeping:
+    audit_logging: true
+    log_format: structured_json
+    retention_period: 90d
+    log_contents:
+      - prompts_and_responses
+      - tool_calls
+      - decision_pathways
+      - model_version
+      - timestamps
+    immutable: true
+  data_governance:
+    pii_handling: redact
+    data_classification: confidential
+  segregation_of_duties:
+    roles:
+      - id: analyzer
+        description: "Reads code and produces findings"
+        permissions: [review, execute]
+      - id: writer
+        description: "Writes files and commits changes"
+        permissions: [create, submit]
+      - id: auditor
+        description: "Reviews decisions and proposes memory updates"
+        permissions: [audit, report]
+      - id: approver
+        description: "Human role — approves memory PRs and merge decisions"
+        permissions: [approve, reject]
+    conflicts:
+      - [analyzer, auditor]
+      - [writer, auditor]
+    assignments:
+      sentinel: [analyzer]
+      reviewer: [analyzer]
+      scribe: [writer]
+      mirror: [auditor]
+    isolation:
+      state: full
+      credentials: separate
+    handoffs:
+      - action: memory_update
+        required_roles: [auditor, approver]
+        approval_required: true
+      - action: pr_merge
+        required_roles: [analyzer, approver]
+        approval_required: true
+    enforcement: strict
+
+tags:
+  - hackathon
+  - code-review
+  - security
+  - multi-agent
+  - self-learning
+  - semantic-search
+  - gitagent-2026

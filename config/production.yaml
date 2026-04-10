@@ -1,0 +1,26 @@
+# gitrails production configuration
+# Overrides default.yaml for production environments
+
+model:
+  temperature: 0.1  # Stricter in production
+
+runtime:
+  max_turns: 30     # Tighter turn limit in production
+  timeout: 90       # Shorter timeout
+
+risk_thresholds:
+  auto_approve: 0.2  # More conservative auto-approve in production
+  require_review: 0.6
+
+audit:
+  enabled: true
+  retention_days: 365  # Longer retention in production
+
+hooks:
+  enabled: true  # Always enabled in production
+
+# In production, never disable human-in-the-loop
+compliance:
+  human_in_the_loop: conditional
+  kill_switch: true
+  override_capability: true

@@ -1,0 +1,37 @@
+spec_version: "0.1.0"
+name: sentinel
+version: 1.0.0
+description: "Security scanner — detects OWASP Top 10 vulnerabilities, hardcoded secrets, and vulnerable dependencies using semantic search for precision targeting."
+author: gitrails-team
+license: MIT
+
+model:
+  preferred: google:gemini-2.5-flash
+  fallback:
+    - google:gemini-2.5-flash-lite
+  constraints:
+    temperature: 0.1
+    max_tokens: 8192
+
+tools:
+  - git-read
+  - semantic-search
+  - pr-comment
+  - audit-log
+
+skills:
+  - scan-secrets
+  - scan-vulnerabilities
+  - scan-dependencies
+
+compliance:
+  role: analyzer
+  permissions: [read, analyze]
+  prohibited: [write, commit, audit]
+  sod_enforcement: strict
+
+tags:
+  - security
+  - owasp
+  - analyzer
+  - secrets

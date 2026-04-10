@@ -1,0 +1,51 @@
+# gitrails default configuration
+# Override with config/production.yaml or environment variables
+
+agent:
+  name: gitrails
+  version: 1.0.0
+
+  # Separates agent definition directory from working directory
+  # Addresses open-gitagent/gitagent issue #58
+  agent_dir: "."
+  workspace_dir: "."
+
+model:
+  preferred: google:gemini-2.5-flash
+  fallback: google:gemini-2.5-flash-lite
+  temperature: 0.2
+  max_tokens: 8192
+
+runtime:
+  max_turns: 50
+  timeout: 120
+
+retrieval:
+  vector_index_path: ./knowledge/vector-index
+  graph_path: ./knowledge/graph.json
+  embedding_model: Xenova/all-MiniLM-L6-v2
+  chunk_size: 512
+  chunk_overlap: 64
+  top_k: 5
+
+risk_thresholds:
+  auto_approve: 0.3
+  require_review: 0.7
+  # Above require_review → BLOCKED
+
+audit:
+  enabled: true
+  path: .gitagent/audit.jsonl
+  retention_days: 90
+
+hooks:
+  enabled: true
+  bootstrap: hooks/scripts/bootstrap.sh
+  pre_tool: hooks/scripts/pre-tool-audit.sh
+  post_response: hooks/scripts/post-response-check.sh
+  teardown: hooks/scripts/teardown.sh
+
+labels:
+  approved: gitrails/approved
+  needs_review: gitrails/needs-review
+  blocked: gitrails/blocked

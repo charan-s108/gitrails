@@ -1,0 +1,48 @@
+audit:
+  enabled: true
+  path: .gitagent/audit.jsonl
+  format: structured_json
+  immutable: true
+  append_only: true
+  retention_days: 90
+
+  fields_required:
+    - timestamp
+    - session
+    - event
+    - agent
+
+  event_types:
+    - session_start
+    - session_end
+    - tool_call
+    - finding
+    - decision
+    - error
+    - escalation
+    - secret_in_output
+    - blocked
+    - response_clean
+
+  finding_fields_required:
+    - finding_id
+    - agent
+    - skill
+    - severity
+    - file
+    - line
+
+  compliance_events:
+    - event: blocked
+      notify: true
+      escalate: true
+    - event: secret_in_output
+      notify: true
+      escalate: true
+    - event: error
+      notify: true
+      escalate: false
+
+  rotation:
+    compress_after: 90d
+    archive_path: .gitagent/archive/

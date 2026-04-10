@@ -1,0 +1,48 @@
+name: pr-comment
+description: "Post a structured comment to a GitHub PR, set GitHub Check status, and apply PR labels. Used by synthesize to communicate findings."
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    pr_number:
+      type: number
+      description: "GitHub PR number"
+    repo:
+      type: string
+      description: "GitHub repository in owner/repo format"
+    comment_body:
+      type: string
+      description: "Markdown comment body to post"
+    check_status:
+      type: string
+      enum: [pass, fail, pending]
+      description: "GitHub Check Run status to set"
+    label:
+      type: string
+      enum: ["gitrails/approved", "gitrails/needs-review", "gitrails/blocked"]
+      description: "PR label to apply"
+    finding_id:
+      type: string
+      description: "Optional: finding ID for targeted inline comment"
+    line:
+      type: number
+      description: "Optional: line number for inline review comment"
+  required: [pr_number, repo, comment_body]
+output_schema:
+  type: object
+  properties:
+    comment_id:
+      type: string
+    check_run_id:
+      type: string
+    label_applied:
+      type: string
+annotations:
+  requires_confirmation: false
+  read_only: false
+  cost: low
+implementation:
+  type: script
+  path: hooks/scripts/post-response-check.sh
+  runtime: bash
+  timeout: 15

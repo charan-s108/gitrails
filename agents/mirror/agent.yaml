@@ -1,0 +1,31 @@
+spec_version: "0.1.0"
+name: mirror
+version: 1.0.0
+description: "gitrails' conscience — audits its own decisions, detects drift, and proposes learning updates via human-approved PRs. Runs after all other agents complete."
+author: gitrails-team
+license: MIT
+
+model:
+  preferred: google:gemini-2.5-flash
+  fallback:
+    - google:gemini-2.5-flash-lite
+  constraints:
+    temperature: 0.3
+    max_tokens: 8192
+
+skills:
+  - audit-decisions
+  - propose-learning
+  - contradiction-check
+
+compliance:
+  role: auditor
+  permissions: [audit, propose]
+  prohibited: [write, commit, merge]
+  sod_enforcement: strict
+
+tags:
+  - auditor
+  - self-learning
+  - conscience
+  - human-gated

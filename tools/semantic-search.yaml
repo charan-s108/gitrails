@@ -1,0 +1,39 @@
+name: semantic-search
+description: "Query the local vector index for relevant code chunks. Returns file paths and line ranges only. Use git-read to fetch specific lines after this call."
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    query:
+      type: string
+      description: "Natural language description — e.g. 'authentication token validation logic'"
+    top_k:
+      type: number
+      description: "Results to return (default 5, max 20)"
+    file_filter:
+      type: string
+      description: "Optional glob to restrict scope — e.g. 'src/auth/**'"
+  required: [query]
+output_schema:
+  type: object
+  properties:
+    results:
+      type: array
+      items:
+        type: object
+        properties:
+          file: { type: string }
+          start_line: { type: string }
+          end_line: { type: string }
+          score:
+            type: number
+            description: "Cosine similarity 0-1. Higher = more relevant."
+annotations:
+  requires_confirmation: false
+  read_only: true
+  cost: low
+implementation:
+  type: script
+  path: retrieval/index.js
+  runtime: node
+  timeout: 15

@@ -1,0 +1,22 @@
+documents:
+  - path: patterns.md
+    tags: [patterns, team, coding-style]
+    priority: high
+    always_load: true
+  - path: team-preferences.md
+    tags: [preferences, review-style]
+    priority: high
+    always_load: true
+  - path: false-positives.md
+    tags: [false-positives, suppressions]
+    priority: high
+    always_load: true
+  - path: codebase-map.md
+    tags: [architecture, overview]
+    priority: medium
+    always_load: false
+  - path: graph.json
+    tags: [code-graph, structure, functions, hotspots]
+    priority: high
+    always_load: true
+    description: "Code graph adjacency list — query via retrieval/graph.js, never read raw"

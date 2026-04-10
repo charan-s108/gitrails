@@ -1,0 +1,36 @@
+spec_version: "0.1.0"
+name: scribe
+version: 1.0.0
+description: "Documentation writer — generates changelog entries and module documentation for changed code. Never invents behavior not present in the code."
+author: gitrails-team
+license: MIT
+
+model:
+  preferred: google:gemini-2.5-flash
+  fallback:
+    - google:gemini-2.5-flash-lite
+  constraints:
+    temperature: 0.4
+    max_tokens: 8192
+
+tools:
+  - git-read
+  - git-write
+  - semantic-search
+  - audit-log
+
+skills:
+  - generate-changelog
+  - document-module
+
+compliance:
+  role: writer
+  permissions: [write, commit]
+  prohibited: [analyze, audit]
+  sod_enforcement: strict
+
+tags:
+  - documentation
+  - writer
+  - changelog
+  - docstrings

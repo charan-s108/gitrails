@@ -1,0 +1,18 @@
+hooks:
+  on_session_start:
+    - script: scripts/bootstrap.sh
+      description: "Load memory, build/reload vector index, load code graph"
+
+  pre_tool_use:
+    - script: scripts/pre-tool-audit.sh
+      description: "Log tool call, block protected branch writes, redact secrets"
+      compliance: true
+
+  post_response:
+    - script: scripts/post-response-check.sh
+      description: "Validate no raw secrets in output, check scope compliance"
+      compliance: true
+
+  on_error:
+    - script: scripts/teardown.sh
+      description: "git reset, open draft PR with error context, escalate"

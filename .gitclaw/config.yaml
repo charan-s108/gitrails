@@ -1,0 +1,10 @@
+agent_dir: "."
+model: "google:gemini-2.5-flash"
+max_turns: 50
+timeout: 120
+hooks:
+  enabled: true
+audit:
+  enabled: true
+  path: ".gitagent/audit.jsonl"
+  retention_days: 90
