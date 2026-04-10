@@ -337,6 +337,7 @@ Tool failure → retry once → log `BLOCKED` → skip skill → continue. Agent
 - Git
 - [Google AI Studio key](https://aistudio.google.com) (free, no credit card)
 - GitHub Personal Access Token (scopes: `repo`, `pull_requests`)
+- gitclaw runtime: `npm install -g gitclaw`
 
 <br/>
 
@@ -354,12 +355,16 @@ npm install
 cp .env.example .env
 ```
 
-Add your two keys to `.env`:
+Add your keys to `.env`:
 
 ```bash
 GOOGLE_API_KEY=your-google-ai-studio-key   # free at aistudio.google.com
+GEMINI_API_KEY=your-google-ai-studio-key   # same value as GOOGLE_API_KEY
 GITHUB_TOKEN=your-github-pat               # repo + pull_requests scopes
 ```
+
+> Both `GOOGLE_API_KEY` and `GEMINI_API_KEY` must be set to the same value.
+> gitclaw's validation layer reads `GOOGLE_API_KEY`; the LLM call layer reads `GEMINI_API_KEY`.
 
 Everything else is pre-configured.
 
@@ -379,12 +384,18 @@ npm run validate      # uses @open-gitagent/gitagent — must exit 0
 npm run info          # shows all 4 agents + 12 skills
 ```
 
-### 5 — Run
+### 5 — Run the demo
 
 ```bash
-gitclaw --dir . "What are your skills and agents?"   # interactive session
-npm run demo          # run the full demo flow against this repo
-npm start             # alias for gitclaw --dir .
+npm run demo          # indexes demo-target/ then scans it for vulnerabilities
+npm run demo:setup    # rebuild index from demo-target/ only
+npm run demo:scan     # run the security scan (requires API key)
+```
+
+Or start an interactive session:
+
+```bash
+npm start             # gitclaw --dir . (REPL mode)
 ```
 
 <br/>
