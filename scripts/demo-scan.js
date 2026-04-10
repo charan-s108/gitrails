@@ -71,10 +71,13 @@ Do ALL steps now using cli tool calls. Start with Step 1 immediately.`;
 async function main() {
   console.log('gitrails demo scan starting...\n');
 
+  const model = process.env.GITRAILS_MODEL || 'google:gemini-2.5-flash-lite';
+
   for await (const event of query({
     dir: process.cwd(),
     prompt: SCAN_PROMPT,
     systemPromptSuffix: SYSTEM_PROMPT_SUFFIX,
+    model,
   })) {
     switch (event.type) {
       case 'message_update': {

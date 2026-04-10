@@ -1,5 +1,5 @@
 agent_dir: "."
-model: "google:gemini-2.5-flash"
+model: "google:gemini-2.5-flash-lite"
 max_turns: 50
 timeout: 120
 hooks:

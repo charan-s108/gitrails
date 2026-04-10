@@ -2,14 +2,14 @@
 
 <br/>
 
-```
+<pre>
   ██████╗ ██╗████████╗██████╗  █████╗ ██╗██╗     ███████╗
  ██╔════╝ ██║╚══██╔══╝██╔══██╗██╔══██╗██║██║     ██╔════╝
  ██║  ███╗██║   ██║   ██████╔╝███████║██║██║     ███████╗
  ██║   ██║██║   ██║   ██╔══██╗██╔══██║██║██║     ╚════██║
  ╚██████╔╝██║   ██║   ██║  ██║██║  ██║██║███████╗███████║
   ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝
-```
+</pre>
 
 ### *Your codebase has a new teammate. It never misses a PR.*
 
@@ -252,78 +252,11 @@ Tool failure → retry once → log `BLOCKED` → skip skill → continue. Agent
 
 ## 🎬 Demo
 
-<!-- ─────────────────────────────────────────────────────────────────────────
-     DEMO VIDEO
-     
-     Record using Loom (https://loom.com) or OBS, then upload to YouTube.
-     Replace this block with:
-     
-     Option A — YouTube embed:
-     [![Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)
-     
-     Option B — Loom embed:
-     [![Demo](https://cdn.loom.com/sessions/thumbnails/YOUR_ID-with-play.gif)](https://loom.com/share/YOUR_ID)
-     
-     Option C — GIF recording (for short demos, use Peek or Kooha on Ubuntu):
-     ![Demo](assets/demo.gif)
-     
-     See DEMO_SCRIPT.md for the full recording walkthrough.
-     ─────────────────────────────────────────────────────────────────────────
--->
-
 <div align="center">
 
-> 📽 **Demo video** — see [DEMO_SCRIPT.md](DEMO_SCRIPT.md) for the recording walkthrough.
-> Replace this block with a YouTube or Loom embed once recorded.
+![gitrails demo](assets/demo.gif)
 
 </div>
-
-<br/>
-
-**What the demo covers — 11 steps:**
-
-```
- 1  PR #42 opens — hardcoded AKIA key in src/auth/config.js + zero tests
-
- 2  gitrails-pr.yml triggers
-    └─ branch gitrails/session-f3a9b2c1 created
-
- 3  bootstrap.sh runs
-    └─ memory loaded · vector index confirmed · code graph loaded
-
- 4  triage queries vector index
-    └─ "hardcoded credentials authentication" → config.js line 14 · score: 0.97
-    └─ 12 tokens to find the file, not 3,000
-
- 5  sentinel confirms CRITICAL
-    └─ AWS key AKIA[REDACTED] — finding_id: SEC-001
-    └─ raw value never appears in any output, log, or PR comment
-
- 6  reviewer computes risk via code graph + semantic diff
-    └─ complexity_delta from getHotspots() — zero file reads
-    └─ score: 0.74 — BLOCKED by SEC-001 override
-
- 7  PR blocked
-    └─ label: gitrails/blocked
-    └─ GitHub Check: FAIL
-    └─ structured findings table posted as review comment
-
- 8  Developer fixes: key → .env · adds 3 tests · fixes null check
-    └─ force-push to PR branch
-
- 9  gitrails re-runs
-    └─ score: 0.09 — PASS
-    └─ label: gitrails/approved · GitHub Check: PASS
-
-10  teardown.sh fires → mirror runs
-    └─ propose-learning opens PR to knowledge/false-positives.md
-       "Stop flagging __mocks__/ test fixtures — team uses realistic
-        fake tokens there by convention."
-
-11  Human merges mirror's PR
-    └─ next session: __mocks__/ is suppressed automatically
-    └─ gitrails has learned something new
-```
 
 <br/>
 

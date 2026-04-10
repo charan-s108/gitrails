@@ -6,7 +6,7 @@ author: gitrails-team
 license: MIT
 
 model:
-  preferred: google:gemini-2.5-flash
+  preferred: google:gemini-2.5-flash-lite
   fallback:
     - google:gemini-2.5-flash-lite
   constraints:
