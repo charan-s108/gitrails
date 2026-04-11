@@ -15,6 +15,8 @@
 <!-- Format: - [pattern]: [detection rule] -->
 
 ## Recent Sessions
+- 2026-04-11 PR #local: APPROVED 0.00 — 0 finding(s), 0 doc(s)
+- 2026-04-11 PR #local: NEEDS_REVIEW 0.08 — 0 finding(s), 0 doc(s)
 
 <!-- Populated automatically at session end -->
 <!-- Format: - [date] PR #[n]: [verdict] [risk_score] — [one-line summary] -->
