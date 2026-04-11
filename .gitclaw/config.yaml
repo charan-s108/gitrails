@@ -1,5 +1,5 @@
 agent_dir: "."
-model: "groq:llama-3.3-70b-versatile"
+model: "${GITRAILS_MODEL}"
 max_turns: 8
 timeout: 120
 hooks:
