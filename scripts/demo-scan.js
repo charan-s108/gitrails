@@ -96,7 +96,7 @@ const BASE_URL = 'https://api.groq.com/openai/v1';
 
 const ARGV   = process.argv.slice(2);
 const agentArg = ARGV[ARGV.indexOf('--agent') + 1] || ARGV.find(a => !a.startsWith('-')) || 'sentinel';
-const TARGET = process.env.GITRAILS_TARGET || 'demo-target/';
+const TARGET = process.env.GITRAILS_TARGET || 'scenarios/blocked';
 
 // ── Agent definitions ─────────────────────────────────────────────────────────
 
