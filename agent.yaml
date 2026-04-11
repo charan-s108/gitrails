@@ -6,7 +6,7 @@ author: gitrails-team
 license: MIT
 
 model:
-  preferred: "${GITRAILS_MODEL}"
+  preferred: "groq:llama-3.3-70b-versatile"
   fallback:
     - "${GITRAILS_FALLBACK_MODEL}"
   constraints:
