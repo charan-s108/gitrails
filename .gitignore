@@ -13,6 +13,9 @@ memory/runtime/dailylog.md
 knowledge/vector-index/
 !knowledge/vector-index/.gitkeep
 
+# Result cache — rebuilt automatically, no need to commit
+.cache/
+
 # OS
 .DS_Store
 *.log

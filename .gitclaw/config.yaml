@@ -1,0 +1,9 @@
+agent_dir: "."
+model: "${GITRAILS_MODEL}"
+max_turns: 8
+timeout: 120
+hooks:
+  enabled: true
+audit:
+  enabled: true
+  path: ".gitagent/audit.jsonl"

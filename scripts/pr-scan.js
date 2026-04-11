@@ -15,7 +15,8 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, appendFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'fs';
+import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -132,6 +133,31 @@ const BUDGETS = {
   mirror:   { maxChars:  3_200, maxFiles: 2 },
 };
 
+// ── Result cache ─────────────────────────────────────────────────────────────
+
+const CACHE_DIR = join(ROOT, '.cache');
+
+function getCacheKey(diffCtx) {
+  return createHash('sha1').update(diffCtx.raw || diffCtx.diff || '').digest('hex').slice(0, 16);
+}
+
+function loadCache(key) {
+  try {
+    const p = join(CACHE_DIR, `pr-${key}.json`);
+    if (!existsSync(p)) return null;
+    const data = JSON.parse(readFileSync(p, 'utf-8'));
+    if (Date.now() - data.ts > 24 * 60 * 60 * 1000) return null; // >24h old
+    return data;
+  } catch { return null; }
+}
+
+function saveCache(key, result) {
+  try {
+    mkdirSync(CACHE_DIR, { recursive: true });
+    writeFileSync(join(CACHE_DIR, `pr-${key}.json`), JSON.stringify({ ...result, ts: Date.now() }), 'utf-8');
+  } catch { /* non-fatal */ }
+}
+
 // ── Groq API call with retry ──────────────────────────────────────────────────
 
 async function callGroq(model, messages, maxTokens = 2048) {
@@ -148,16 +174,27 @@ async function callGroq(model, messages, maxTokens = 2048) {
   return data.choices[0].message.content || '';
 }
 
+function isRateLimit(err) {
+  return err.message.includes('429') || err.message.includes('quota') ||
+         err.message.includes('6000') || err.message.includes('12000');
+}
+
 async function callWithRetry(model, messages, maxTokens = 2048) {
   try {
     return await callGroq(model, messages, maxTokens);
   } catch (err) {
-    const isRateLimit = err.message.includes('429') || err.message.includes('quota') ||
-                        err.message.includes('6000') || err.message.includes('12000');
-    if (isRateLimit) {
-      warn('Rate limit — waiting 62s then retrying...');
-      await new Promise(r => setTimeout(r, 62_000));
-      return await callGroq(model, messages, maxTokens);
+    if (isRateLimit(err)) {
+      warn(`Rate limit on ${model} — falling back to light model immediately`);
+      try {
+        return await callGroq(MODELS.light, messages, maxTokens);
+      } catch (err2) {
+        if (isRateLimit(err2)) {
+          warn('Light model also rate-limited — waiting 62s...');
+          await new Promise(r => setTimeout(r, 62_000));
+          return await callGroq(MODELS.light, messages, maxTokens);
+        }
+        throw err2;
+      }
     }
     throw err;
   }
@@ -754,6 +791,15 @@ async function main() {
   const diffCtx = await getDiff();
   info(`Mode: ${diffCtx.mode}  Files: ${(diffCtx.files || []).length}`);
 
+  // Cache check — skip all LLM calls if same diff was scanned <24h ago
+  const cacheKey = getCacheKey(diffCtx);
+  const cached   = loadCache(cacheKey);
+  if (cached) {
+    ok('Cache hit — skipping API calls');
+    renderSummary(cached.sentinel, cached.reviewer, cached.scribe, cached.mirror);
+    process.exit(cached.reviewer.verdict === 'BLOCKED' ? 1 : 0);
+  }
+
   // Phase 2 — triage (zero LLM calls)
   phase(2, 'Triage');
   const triage = runTriage(diffCtx);
@@ -775,6 +821,9 @@ async function main() {
 
   // mirror audits all three
   const mirror = await runMirror(sentinel, reviewer, scribe);
+
+  // Save to cache for subsequent identical diffs
+  saveCache(cacheKey, { sentinel, reviewer, scribe, mirror });
 
   // Phase 4 — synthesize (GitHub integrations)
   phase(4, 'Synthesize');
