@@ -21,6 +21,7 @@ steps:
     agent: gitrails
     description: "Build scoped dispatch plan via semantic search"
     depends_on: [bootstrap]
+    debug: true
 
   - id: dispatch
     type: skill
