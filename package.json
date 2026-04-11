@@ -26,6 +26,10 @@
     "demo:scan": "dotenv -e .env -- node scripts/demo-scan.js --agent sentinel",
     "demo:all": "dotenv -e .env -- node scripts/demo-scan.js --agent all",
     "demo": "npm run demo:setup && npm run demo:all",
+    "showcase": "npx dotenv -e .env -- node scripts/showcase.js",
+    "showcase:blocked": "npx dotenv -e .env -- node scripts/showcase.js --scenario blocked",
+    "showcase:review": "npx dotenv -e .env -- node scripts/showcase.js --scenario needs-review",
+    "showcase:clean": "npx dotenv -e .env -- node scripts/showcase.js --scenario clean",
     "start": "dotenv -e .env -- node scripts/pr-scan.js --full",
     "test": "node scripts/pr-scan.js --diff HEAD~1..HEAD 2>&1 | head -20 || true",
     "prepublishOnly": "node -e \"console.log('gitrails v' + process.env.npm_package_version + ' — ready to publish')\""
