@@ -123,7 +123,7 @@ git-read src/auth/login.js
 Why this is bad:
 - Semantic-search returns exact line ranges — use them
 - Full-file reads consume 60-95% more tokens for the same finding
-- On Gemini Flash free tier (250 RPD), full reads exhaust the quota in ~2 sessions
+- On Groq free tier (6000 TPM), full reads exhaust the quota in ~2 sessions
 
 ---
 

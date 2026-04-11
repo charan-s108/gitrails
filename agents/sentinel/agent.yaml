@@ -6,9 +6,9 @@ author: gitrails-team
 license: MIT
 
 model:
-  preferred: google:gemini-2.5-flash-lite
+  preferred: "${GITRAILS_MODEL}"
   fallback:
-    - google:gemini-2.5-flash-lite
+    - "${GITRAILS_FALLBACK_MODEL}"
   constraints:
     temperature: 0.1
     max_tokens: 8192

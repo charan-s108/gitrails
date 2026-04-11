@@ -1,5 +1,5 @@
 agent_dir: "."
-model: "google:gemini-2.5-flash-lite"
+model: "${GITRAILS_MODEL}"
 max_turns: 50
 timeout: 120
 hooks:

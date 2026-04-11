@@ -43,7 +43,7 @@ jobs:
       - name: Bootstrap gitrails
         run: bash hooks/scripts/bootstrap.sh
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
 
@@ -53,7 +53,7 @@ jobs:
             --prompt "Review PR #${{ github.event.pull_request.number }} on branch ${{ github.head_ref }}" \
             --session-id "${{ env.SESSION_UUID }}"
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
           GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}

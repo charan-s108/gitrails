@@ -40,7 +40,7 @@ Edit `config/default.yaml` or set env vars in `.env`:
 
 ```bash
 npm install
-cp .env.example .env  # fill in GOOGLE_API_KEY and GITHUB_TOKEN
+cp .env.example .env  # fill in GROQ_API_KEY and GITHUB_TOKEN
 npm run index:build   # build vector index
 npm run graph:build   # build code graph
 npm run validate      # verify gitagent spec compliance

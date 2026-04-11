@@ -2,7 +2,7 @@
 
 > Read this entire file before writing a single line of code.
 > Complete, spec-accurate operating brief for the gitrails project.
-> Source of truth: gitagent spec v0.1.0 · gitclaw SDK · Gemini 2.5 Flash (free tier)
+> Source of truth: gitagent spec v0.1.0 · gitclaw SDK · Groq (model via GITRAILS_MODEL env var)
 
 ---
 
@@ -26,18 +26,24 @@ on every scan. More runs per day on the free tier. Precision findings, not noise
 
 ---
 
-## Model: Gemini 2.5 Flash (Free Tier)
+## Model: Provider-Agnostic (Groq by default)
 
-Use `google:gemini-2.5-flash` throughout. Free tier via Google AI Studio.
-No credit card. No cost. Get your key at: https://aistudio.google.com
+**No model is hardcoded anywhere in the codebase.**
+Set `GITRAILS_MODEL` and `GITRAILS_FALLBACK_MODEL` in `.env` — that's the only place.
+All agent yamls, demo-scan.js, gitclaw config, and Dockerfile read from those env vars.
 
-| Model | RPM | RPD | Cost | Role |
+Current default (Groq free tier):
+
+| Env var | Value | RPM | TPM | Cost |
 |---|---|---|---|---|
-| `google:gemini-2.5-flash` | 10 | 250 | $0 | Primary (all agents) |
-| `google:gemini-2.5-flash-lite` | 15 | 1000 | $0 | Fallback |
+| `GITRAILS_MODEL` | `groq:llama-3.3-70b-versatile` | 30 | 6000 | $0 |
+| `GITRAILS_FALLBACK_MODEL` | `groq:llama-3.1-8b-instant` | 30 | 6000 | $0 |
 
-A full gitrails demo run is 8-12 API calls. Free tier supports 20+ complete
-demo cycles per day without spending a cent.
+Get a free Groq key at: https://console.groq.com (no credit card)
+
+**To switch models**: edit only `.env`. Zero code changes required.
+demo-scan.js calls Groq's OpenAI-compatible API directly (not gitclaw SDK) to
+avoid loading the ~42k-token agent spec into the system prompt.
 
 ---
 
@@ -55,7 +61,7 @@ demo cycles per day without spending a cent.
 ## Stack
 
 - **Runtime**: gitclaw (`npm install -g gitclaw`) — Node.js 18+ only
-- **Model**: `google:gemini-2.5-flash` (free) · fallback `google:gemini-2.5-flash-lite`
+- **Model**: set via `GITRAILS_MODEL` env var — default `groq:llama-3.3-70b-versatile`
 - **Embeddings**: `@xenova/transformers` — runs locally in Node.js, zero cost, no API
 - **Vector index**: `vectra` — pure Node.js local vector store, saves as JSON files
 - **Code graph**: `knowledge/graph.json` — adjacency list, built at bootstrap, git-tracked
@@ -215,22 +221,25 @@ gitrails/
 # ─────────────────────────────────────────────────────────
 # gitrails — environment variables
 # NEVER commit .env — it is in .gitignore
-# Get GOOGLE_API_KEY free at: https://aistudio.google.com
-# No credit card. Takes 2 minutes.
+# Get GROQ_API_KEY free at: https://console.groq.com
+# No credit card. No cost.
 # ─────────────────────────────────────────────────────────
 
-# ── Required ──────────────────────────────────────────────
+# ── LLM Provider ──────────────────────────────────────────
 
-# Gemini API key (free tier, Google AI Studio)
-GOOGLE_API_KEY=
+# Groq API key — get free at https://console.groq.com
+GROQ_API_KEY=
+
+# ── Required ──────────────────────────────────────────────
 
 # GitHub PAT — scopes: repo, pull_requests
 GITHUB_TOKEN=
 
 # ── Model ─────────────────────────────────────────────────
 
-GITRAILS_MODEL=google:gemini-2.5-flash
-GITRAILS_FALLBACK_MODEL=google:gemini-2.5-flash-lite
+# No model is hardcoded anywhere. Change here to switch provider/model globally.
+GITRAILS_MODEL=groq:llama-3.3-70b-versatile
+GITRAILS_FALLBACK_MODEL=groq:llama-3.1-8b-instant
 GITRAILS_MAX_TURNS=50
 GITRAILS_TIMEOUT=120
 
@@ -269,10 +278,10 @@ GITRAILS_TOP_K=5
 ## .env.example — Safe to Commit
 
 ```bash
-GOOGLE_API_KEY=your-google-ai-studio-key-here
+GROQ_API_KEY=your-groq-api-key-here
 GITHUB_TOKEN=your-github-pat-here
-GITRAILS_MODEL=google:gemini-2.5-flash
-GITRAILS_FALLBACK_MODEL=google:gemini-2.5-flash-lite
+GITRAILS_MODEL=groq:llama-3.3-70b-versatile
+GITRAILS_FALLBACK_MODEL=groq:llama-3.1-8b-instant
 GITRAILS_MAX_TURNS=50
 GITRAILS_TIMEOUT=120
 GITRAILS_RISK_THRESHOLD=0.3
@@ -319,9 +328,9 @@ author: gitrails-team
 license: MIT
 
 model:
-  preferred: google:gemini-2.5-flash
+  preferred: "${GITRAILS_MODEL}"
   fallback:
-    - google:gemini-2.5-flash-lite
+    - "${GITRAILS_FALLBACK_MODEL}"
   constraints:
     temperature: 0.2
     max_tokens: 8192
@@ -431,7 +440,7 @@ tags:
 
 Without retrieval: every agent reads full files into context.
 A 500-line file = ~4,000 tokens. Four agents x 10 files = 160,000 tokens/run.
-At 10 RPM free tier on Gemini Flash, that blows quota in 2 runs.
+At 6000 TPM on Groq free tier, that blows quota in 2 runs.
 
 With retrieval: semantic-search returns only the relevant 30-80 line range.
 Same scan = ~2,000 tokens total. You run 20+ complete sessions per day for free.
@@ -953,7 +962,7 @@ documents:
 
 ```yaml
 agent_dir: "."
-model: "google:gemini-2.5-flash"
+model: "${GITRAILS_MODEL}"
 max_turns: 50
 timeout: 120
 hooks:
@@ -990,7 +999,7 @@ audit:
   "devDependencies": {
     "@types/node": "^20.0.0"
   },
-  "keywords": ["gitagent", "gitclaw", "gemini", "code-review", "security", "hackathon"],
+  "keywords": ["gitagent", "gitclaw", "groq", "code-review", "security", "hackathon"],
   "license": "MIT"
 }
 ```
@@ -1160,13 +1169,13 @@ Step 9: teardown.sh → mirror/propose-learning fires
 2.  Create package.json (exact content above, includes vectra + @xenova)
 3.  npm install
 4.  Create .gitignore + .env + .env.example (exact content above)
-5.  Write agent.yaml (model: google:gemini-2.5-flash)
+5.  Write agent.yaml (model: "${GITRAILS_MODEL}" — reads from env)
 6.  Write SOUL.md — use narrative opener above (this is 30% of score)
 7.  Write RULES.md — specific enforceable rules only, no vague statements
 8.  Write DUTIES.md — root SOD policy
 9.  Write AGENTS.md — framework-agnostic fallback
 10. Build agents/mirror/ FIRST — the differentiator
-    a. agent.yaml (model: google:gemini-2.5-flash, temperature: 0.3)
+    a. agent.yaml (model: "${GITRAILS_MODEL}", temperature: 0.3)
     b. SOUL.md (conscience narrative above)
     c. RULES.md
     d. DUTIES.md
@@ -1234,4 +1243,4 @@ No other hackathon submission built either of these. gitrails built both.
 ---
 
 *gitrails — GitAgent Hackathon 2026*
-*gitagent spec v0.1.0 · gitclaw · google:gemini-2.5-flash (free tier) · $0*
+*gitagent spec v0.1.0 · gitclaw · groq:llama-3.3-70b-versatile (free tier) · $0*

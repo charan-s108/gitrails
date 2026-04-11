@@ -90,7 +90,7 @@ signals. Token usage is minimal — only PR comment posting.
 Fix SEC-f3a9-001 before this PR can proceed.
 
 ---
-*gitrails v1.0.0 · gitagent spec v0.1.0 · google:gemini-2.5-flash*
+*gitrails v1.0.0 · gitagent spec v0.1.0 · groq (model via GITRAILS_MODEL)*
 ```
 
 ## Output Format

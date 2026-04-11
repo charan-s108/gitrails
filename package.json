@@ -12,8 +12,13 @@
     "index:rebuild": "node retrieval/index.js --build --rebuild --root ./",
     "graph:build": "node retrieval/graph.js --build --root ./",
     "demo:setup": "node retrieval/index.js --build --rebuild --root ./demo-target && node retrieval/graph.js --build --root ./demo-target",
-    "demo:scan": "dotenv -e .env -- node scripts/demo-scan.js",
-    "demo": "npm run demo:setup && npm run demo:scan",
+    "demo:sentinel": "dotenv -e .env -- node scripts/demo-scan.js --agent sentinel",
+    "demo:reviewer": "dotenv -e .env -- node scripts/demo-scan.js --agent reviewer",
+    "demo:scribe": "dotenv -e .env -- node scripts/demo-scan.js --agent scribe",
+    "demo:mirror": "dotenv -e .env -- node scripts/demo-scan.js --agent mirror",
+    "demo:scan": "dotenv -e .env -- node scripts/demo-scan.js --agent sentinel",
+    "demo:all": "dotenv -e .env -- node scripts/demo-scan.js --agent all",
+    "demo": "npm run demo:setup && npm run demo:all",
     "start": "dotenv -e .env -- gitclaw --dir ."
   },
   "dependencies": {
@@ -27,7 +32,7 @@
   "keywords": [
     "gitagent",
     "gitclaw",
-    "gemini",
+    "groq",
     "code-review",
     "security",
     "hackathon"

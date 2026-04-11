@@ -16,9 +16,9 @@
 <br/>
 
 [![gitagent](https://img.shields.io/badge/gitagent-spec%20v0.1.0-6366f1?style=flat-square&logo=git&logoColor=white)](https://github.com/open-gitagent/gitagent)
-[![gemini](https://img.shields.io/badge/Gemini%202.5%20Flash-free%20tier-4285F4?style=flat-square&logo=google&logoColor=white)](https://aistudio.google.com)
+[![groq](https://img.shields.io/badge/Groq-free%20tier-F55036?style=flat-square&logo=groq&logoColor=white)](https://console.groq.com)
 [![gitclaw](https://img.shields.io/badge/runtime-gitclaw-0f172a?style=flat-square)](https://github.com/open-gitagent/gitclaw)
-[![cost](https://img.shields.io/badge/API%20cost-%240-22c55e?style=flat-square)](https://aistudio.google.com)
+[![cost](https://img.shields.io/badge/API%20cost-%240-22c55e?style=flat-square)](https://console.groq.com)
 [![license](https://img.shields.io/badge/license-MIT-f59e0b?style=flat-square)](LICENSE)
 [![hackathon](https://img.shields.io/badge/GitAgent%20Hackathon-2026-blueviolet?style=flat-square)](https://hackculture.io/hackathons/gitagent-hackathon)
 
@@ -50,7 +50,7 @@
 
 Most code review tools are stateless — they run, produce output, and forget everything. Next PR, same noise. gitrails is different on two axes that no other tool in this hackathon addressed:
 
-**Token-efficient retrieval.** Before any agent reads a file, it queries a local vector index and returns file paths with line ranges. The agent reads 30 lines instead of 500. On Gemini Flash free tier (250 req/day), that's the difference between 2 complete reviews per day and 20+.
+**Token-efficient retrieval.** Before any agent reads a file, it queries a local vector index and returns file paths with line ranges. The agent reads 30 lines instead of 500. On Groq free tier (6000 TPM), that's the difference between 2 complete reviews per day and 20+.
 
 **Self-learning through human supervision.** The `mirror` agent audits gitrails' own decisions after every session. When it finds something worth learning, it opens a PR to `knowledge/`. A human merges it or doesn't. gitrails never self-modifies. It improves through collaboration — the way a good engineer should.
 
@@ -160,7 +160,7 @@ Every competing tool reads entire source files into context on every run. gitrai
 Without retrieval:
   500-line file  =  ~4,000 tokens
   4 agents × 10 files  =  160,000 tokens per run
-  Gemini Flash free tier quota: gone in 2 runs per day
+  Groq free tier (6000 TPM): quota gone in 2 runs per day
 ```
 
 **The gitrails approach:**
@@ -268,7 +268,7 @@ Tool failure → retry once → log `BLOCKED` → skip skill → continue. Agent
 
 - Node.js 18+
 - Git
-- [Google AI Studio key](https://aistudio.google.com) (free, no credit card)
+- [Groq API key](https://console.groq.com) (free, no credit card)
 - GitHub Personal Access Token (scopes: `repo`, `pull_requests`)
 - gitclaw runtime: `npm install -g gitclaw`
 
@@ -291,15 +291,18 @@ cp .env.example .env
 Add your keys to `.env`:
 
 ```bash
-GOOGLE_API_KEY=your-google-ai-studio-key   # free at aistudio.google.com
-GEMINI_API_KEY=your-google-ai-studio-key   # same value as GOOGLE_API_KEY
-GITHUB_TOKEN=your-github-pat               # repo + pull_requests scopes
+GROQ_API_KEY=your-groq-api-key     # free at console.groq.com
+GITHUB_TOKEN=your-github-pat       # repo + pull_requests scopes
 ```
 
-> Both `GOOGLE_API_KEY` and `GEMINI_API_KEY` must be set to the same value.
-> gitclaw's validation layer reads `GOOGLE_API_KEY`; the LLM call layer reads `GEMINI_API_KEY`.
+To switch models in the future — edit **only** `.env`:
 
-Everything else is pre-configured.
+```bash
+GITRAILS_MODEL=groq:llama-3.3-70b-versatile   # or any groq: model
+GITRAILS_FALLBACK_MODEL=groq:llama-3.1-8b-instant
+```
+
+No code changes needed. All agents, workflows, and scripts read from these env vars.
 
 ### 3 — Build the retrieval layer
 
@@ -322,7 +325,7 @@ npm run info          # shows all 4 agents + 12 skills
 ```bash
 npm run demo          # indexes demo-target/ then scans it for vulnerabilities
 npm run demo:setup    # rebuild index from demo-target/ only
-npm run demo:scan     # run the security scan (requires API key)
+npm run demo:scan     # run the security scan (requires GROQ_API_KEY)
 ```
 
 Or start an interactive session:
@@ -337,14 +340,14 @@ npm start             # gitclaw --dir . (REPL mode)
 
 ## ⚙️ Configuration
 
-All configuration is in `.env`. Defaults work out of the box — only `GOOGLE_API_KEY` and `GITHUB_TOKEN` are required.
+All configuration is in `.env`. Only `GROQ_API_KEY` and `GITHUB_TOKEN` are required.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `GOOGLE_API_KEY` | — | Gemini API key · required |
+| `GROQ_API_KEY` | — | Groq API key · required · [get free](https://console.groq.com) |
 | `GITHUB_TOKEN` | — | GitHub PAT · required |
-| `GITRAILS_MODEL` | `google:gemini-2.5-flash` | Primary model |
-| `GITRAILS_FALLBACK_MODEL` | `google:gemini-2.5-flash-lite` | Fallback model |
+| `GITRAILS_MODEL` | `groq:llama-3.3-70b-versatile` | Primary model — edit `.env` to switch |
+| `GITRAILS_FALLBACK_MODEL` | `groq:llama-3.1-8b-instant` | Fallback model |
 | `GITRAILS_RISK_THRESHOLD` | `0.3` | Score below which PRs auto-approve |
 | `GITRAILS_AUDIT_RETENTION_DAYS` | `90` | Days to retain audit.jsonl |
 | `GITRAILS_EMBEDDING_MODEL` | `Xenova/all-MiniLM-L6-v2` | Local embedding model |
@@ -352,12 +355,12 @@ All configuration is in `.env`. Defaults work out of the box — only `GOOGLE_AP
 | `GITRAILS_CHUNK_OVERLAP` | `64` | Overlap between consecutive chunks |
 | `GITRAILS_TOP_K` | `5` | Results returned per semantic-search query |
 
-**Model limits (free tier):**
+**Groq free tier limits:**
 
-| Model | RPM | RPD | Cost |
+| Model | RPM | TPM | Cost |
 |-------|-----|-----|------|
-| `google:gemini-2.5-flash` | 10 | 250 | $0 |
-| `google:gemini-2.5-flash-lite` | 15 | 1,000 | $0 |
+| `groq:llama-3.3-70b-versatile` | 30 | 6,000 | $0 |
+| `groq:llama-3.1-8b-instant` | 30 | 6,000 | $0 |
 
 <br/>
 
@@ -373,7 +376,7 @@ No infrastructure. gitrails runs inside the Actions runner on every PR.
 # Copy the workflow to your target repo
 cp .github/workflows/gitrails-pr.yml /path/to/your-repo/.github/workflows/
 
-# Add GOOGLE_API_KEY as a repository secret
+# Add GROQ_API_KEY as a repository secret
 # GITHUB_TOKEN is provided automatically by Actions
 ```
 
@@ -384,7 +387,7 @@ Open a pull request. gitrails runs automatically.
 ```bash
 npm install -g gitclaw
 
-export GOOGLE_API_KEY="your-key"
+export GROQ_API_KEY="your-key"
 export GITHUB_TOKEN="your-token"
 
 gitclaw --dir /path/to/gitrails --repo https://github.com/org/repo "Review PR #42"
@@ -396,8 +399,10 @@ gitclaw --dir /path/to/gitrails --repo https://github.com/org/repo "Review PR #4
 docker build -t gitrails .
 
 docker run --rm \
-  -e GOOGLE_API_KEY="your-key" \
+  -e GROQ_API_KEY="your-key" \
   -e GITHUB_TOKEN="your-token" \
+  -e GITRAILS_MODEL="groq:llama-3.3-70b-versatile" \
+  -e GITRAILS_FALLBACK_MODEL="groq:llama-3.1-8b-instant" \
   -v $(pwd):/workspace \
   gitrails
 ```
@@ -546,7 +551,7 @@ Built for the [GitAgent Hackathon 2026](https://hackculture.io/hackathons/gitage
 
 <div align="center">
 
-*gitagent spec v0.1.0 · gitclaw · google:gemini-2.5-flash · $0*
+*gitagent spec v0.1.0 · gitclaw · groq:llama-3.3-70b-versatile · $0*
 
 *GitAgent Hackathon 2026 — HackCulture × Lyzr*
 

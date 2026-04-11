@@ -11,7 +11,7 @@
 git clone <this-repo>
 npm install
 cp .env.example .env
-# Add GOOGLE_API_KEY from https://aistudio.google.com (free, no credit card)
+# Add GROQ_API_KEY from https://console.groq.com (free, no credit card)
 # Add GITHUB_TOKEN with repo + pull_requests scopes
 npm run index:build   # ~60s first time, downloads ~80MB embedding model
 npm run graph:build   # builds code graph

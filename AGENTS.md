@@ -8,7 +8,7 @@ and delegation relationships. Used as fallback when agent.yaml is not parsed.
 ## gitrails (orchestrator)
 
 **Path**: `.` (root)
-**Model**: google:gemini-2.5-flash
+**Model**: ${GITRAILS_MODEL}
 **Temperature**: 0.2
 **Role**: Orchestrator — coordinates all sub-agents, never does domain work
 
@@ -24,7 +24,7 @@ and delegation relationships. Used as fallback when agent.yaml is not parsed.
 ## sentinel
 
 **Path**: `agents/sentinel/`
-**Model**: google:gemini-2.5-flash
+**Model**: ${GITRAILS_MODEL}
 **Temperature**: 0.1
 **Role**: Security scanner (SOD: analyzer)
 
@@ -43,7 +43,7 @@ and delegation relationships. Used as fallback when agent.yaml is not parsed.
 ## reviewer
 
 **Path**: `agents/reviewer/`
-**Model**: google:gemini-2.5-flash
+**Model**: ${GITRAILS_MODEL}
 **Temperature**: 0.2
 **Role**: Code quality reviewer (SOD: analyzer)
 
@@ -66,7 +66,7 @@ risk = (0.35 × security_severity)
 ## scribe
 
 **Path**: `agents/scribe/`
-**Model**: google:gemini-2.5-flash
+**Model**: ${GITRAILS_MODEL}
 **Temperature**: 0.4
 **Role**: Documentation writer (SOD: writer)
 
@@ -81,7 +81,7 @@ risk = (0.35 × security_severity)
 ## mirror
 
 **Path**: `agents/mirror/`
-**Model**: google:gemini-2.5-flash
+**Model**: ${GITRAILS_MODEL}
 **Temperature**: 0.3
 **Role**: Self-auditor / conscience (SOD: auditor)
 

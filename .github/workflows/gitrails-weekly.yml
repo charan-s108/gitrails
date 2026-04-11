@@ -54,7 +54,7 @@ jobs:
             --prompt "Run a weekly audit of the full repository for security vulnerabilities and documentation gaps" \
             --session-id "${{ env.SESSION_UUID }}"
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
           GITRAILS_REPO: ${{ github.repository }}

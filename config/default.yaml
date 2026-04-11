@@ -11,8 +11,8 @@ agent:
   workspace_dir: "."
 
 model:
-  preferred: google:gemini-2.5-flash-lite
-  fallback: google:gemini-2.5-flash
+  preferred: "${GITRAILS_MODEL}"
+  fallback: "${GITRAILS_FALLBACK_MODEL}"
   temperature: 0.2
   max_tokens: 8192
 
