@@ -3,7 +3,7 @@ description: "Full PR review workflow — triage, parallel agent dispatch, synth
 version: 1.0.0
 
 trigger:
-  type: pr_opened_or_updated
+  type: [manual, pr_opened_or_updated]
   branches:
     - "*"
   exclude_branches:
