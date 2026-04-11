@@ -1,10 +1,11 @@
 name: gitrails PR Review
 
 on:
+  push:
+    branches:
+      - "test/**"
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - "**"
     branches-ignore:
       - "gitrails/session-**"
 
@@ -18,7 +19,7 @@ jobs:
       checks: write
 
     steps:
-      - name: Checkout PR branch
+      - name: Checkout branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -46,19 +47,35 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
+          GITRAILS_MODEL_HEAVY: ${{ vars.GITRAILS_MODEL_HEAVY || 'groq:llama-3.3-70b-versatile' }}
+          GITRAILS_MODEL_LIGHT: ${{ vars.GITRAILS_MODEL_LIGHT || 'groq:llama-3.1-8b-instant' }}
 
-      - name: Run gitrails review
-        run: |
-          npx gitclaw --dir . \
-            --prompt "Review PR #${{ github.event.pull_request.number }} on branch ${{ github.head_ref }}" \
-            --session-id "${{ env.SESSION_UUID }}"
+      - name: Run gitrails scan (PR mode)
+        if: github.event_name == 'pull_request'
+        # Direct Node.js runner — bypasses gitclaw SDK to stay within Groq free tier token limits.
+        # Architecture: diff-first → retrieval gate → agent chain → structured handoffs → PR comment + Check.
+        run: node scripts/pr-scan.js --pr ${{ github.event.pull_request.number }}
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITRAILS_MODEL_HEAVY: ${{ vars.GITRAILS_MODEL_HEAVY || 'groq:llama-3.3-70b-versatile' }}
+          GITRAILS_MODEL_LIGHT: ${{ vars.GITRAILS_MODEL_LIGHT || 'groq:llama-3.1-8b-instant' }}
           GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
           GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}
-          GITRAILS_PR_BRANCH: ${{ github.head_ref }}
           GITRAILS_REPO: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+
+      - name: Run gitrails scan (push mode)
+        if: github.event_name == 'push'
+        run: node scripts/pr-scan.js --diff HEAD~1..HEAD
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITRAILS_MODEL_HEAVY: ${{ vars.GITRAILS_MODEL_HEAVY || 'groq:llama-3.3-70b-versatile' }}
+          GITRAILS_MODEL_LIGHT: ${{ vars.GITRAILS_MODEL_LIGHT || 'groq:llama-3.1-8b-instant' }}
+          GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
+          GITRAILS_REPO: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Teardown
         if: always()

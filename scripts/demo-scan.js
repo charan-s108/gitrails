@@ -106,6 +106,7 @@ const AGENTS = {
     label: 'sentinel',
     role:  'Security Scanner',
     color: C.red,
+    temperature: 0.1,
     queries: [
       'hardcoded credentials api key password secret token private key',
       'sql injection string concatenation user input query database',
@@ -138,6 +139,7 @@ Do NOT invent findings. Do NOT call any tools. Analyze only what is shown above.
     label: 'reviewer',
     role:  'Code Quality & Risk Score',
     color: C.yellow,
+    temperature: 0.2,
     queries: [
       'null dereference undefined property access missing null check',
       'missing error handling bare catch promise rejection unhandled',
@@ -175,6 +177,7 @@ Do NOT call any tools. Analyze only the code shown above.`,
     label: 'scribe',
     role:  'Documentation Generator',
     color: C.green,
+    temperature: 0.4,
     queries: [
       'public function missing documentation no jsdoc no comment',
       'exported function async function class method undocumented',
@@ -213,6 +216,7 @@ Do NOT call any tools. Do NOT invent behavior not in the code.`,
     label: 'mirror',
     role:  'Self-Auditor & Learning',
     color: C.magenta,
+    temperature: 0.2,
     queries: [
       'test fixture mock fake token placeholder example credential',
       'false positive example dummy test data not real secret',
@@ -269,10 +273,10 @@ function runCli(command) {
   }
 }
 
-async function chat(messages, allowTools = false) {
+async function chat(messages, allowTools = false, temperature = 0.1) {
   const body = {
     model: MODEL, messages,
-    max_tokens: 2048, temperature: 0.1,
+    max_tokens: 2048, temperature,
   };
   if (allowTools) { body.tools = TOOLS; body.tool_choice = 'auto'; }
   const res = await fetch(`${BASE_URL}/chat/completions`, {
@@ -357,7 +361,7 @@ async function runAgentLoop(agent, context) {
   let apiCalls = 0;
 
   const attempt = async () => {
-    response = await chat(messages, false);   // no tools — analysis only
+    response = await chat(messages, false, agent.temperature ?? 0.1);
     apiCalls++;
   };
 

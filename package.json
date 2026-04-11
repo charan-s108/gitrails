@@ -2,7 +2,10 @@
   "name": "gitrails",
   "version": "1.0.0",
   "type": "module",
-  "description": "Self-aware, learning engineering teammate — gitagent standard",
+  "description": "Self-aware, learning engineering teammate — diff-first, retrieval-gated, structured multi-agent code review",
+  "bin": {
+    "gitrails": "./bin/gitrails.js"
+  },
   "scripts": {
     "validate": "npx @open-gitagent/gitagent validate",
     "info": "npx @open-gitagent/gitagent info",
@@ -11,6 +14,10 @@
     "index:build": "node retrieval/index.js --build --root ./",
     "index:rebuild": "node retrieval/index.js --build --rebuild --root ./",
     "graph:build": "node retrieval/graph.js --build --root ./",
+    "scan": "dotenv -e .env -- node scripts/pr-scan.js",
+    "scan:pr": "dotenv -e .env -- node scripts/pr-scan.js --pr",
+    "scan:diff": "dotenv -e .env -- node scripts/pr-scan.js --diff HEAD~1..HEAD",
+    "scan:full": "dotenv -e .env -- node scripts/pr-scan.js --full",
     "demo:setup": "node retrieval/index.js --build --rebuild --root ./demo-target && node retrieval/graph.js --build --root ./demo-target",
     "demo:sentinel": "dotenv -e .env -- node scripts/demo-scan.js --agent sentinel",
     "demo:reviewer": "dotenv -e .env -- node scripts/demo-scan.js --agent reviewer",
@@ -19,7 +26,9 @@
     "demo:scan": "dotenv -e .env -- node scripts/demo-scan.js --agent sentinel",
     "demo:all": "dotenv -e .env -- node scripts/demo-scan.js --agent all",
     "demo": "npm run demo:setup && npm run demo:all",
-    "start": "dotenv -e .env -- gitclaw --dir ."
+    "start": "dotenv -e .env -- node scripts/pr-scan.js --full",
+    "test": "node scripts/pr-scan.js --diff HEAD~1..HEAD 2>&1 | head -20 || true",
+    "prepublishOnly": "node -e \"console.log('gitrails v' + process.env.npm_package_version + ' — ready to publish')\""
   },
   "dependencies": {
     "@xenova/transformers": "^2.17.0",
@@ -35,7 +44,29 @@
     "groq",
     "code-review",
     "security",
-    "hackathon"
+    "multi-agent",
+    "diff-first",
+    "retrieval-augmented"
   ],
+  "files": [
+    "bin/",
+    "scripts/",
+    "retrieval/",
+    "skills/",
+    "agents/",
+    "knowledge/patterns.md",
+    "knowledge/false-positives.md",
+    "knowledge/team-preferences.md",
+    "config/",
+    "hooks/",
+    "agent.yaml",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./bin/gitrails.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "license": "MIT"
 }

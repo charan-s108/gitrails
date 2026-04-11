@@ -1,6 +1,8 @@
 import { LocalIndex } from 'vectra';
 import { Embedder } from './embedder.js';
-import { readFile, readdir } from 'fs/promises';
+import { readFile, readdir, writeFile } from 'fs/promises';
+import { existsSync, readFileSync } from 'fs';
+import { createHash } from 'crypto';
 import { join, extname } from 'path';
 
 const SUPPORTED = ['.js', '.ts', '.py', '.go', '.java', '.md'];
@@ -14,6 +16,22 @@ export class VectorIndex {
   constructor(indexPath) {
     this.index = new LocalIndex(indexPath);
     this.embedder = new Embedder();
+    this.indexPath = indexPath;
+    this.cache = {};
+  }
+
+  loadCache() {
+    const p = join(this.indexPath, 'embed-cache.json');
+    try { this.cache = JSON.parse(readFileSync(p, 'utf-8')); } catch { this.cache = {}; }
+  }
+
+  async saveCache() {
+    const p = join(this.indexPath, 'embed-cache.json');
+    await writeFile(p, JSON.stringify(this.cache), 'utf-8');
+  }
+
+  sha1(text) {
+    return createHash('sha1').update(text).digest('hex');
   }
 
   chunk(content, filePath) {
@@ -36,19 +54,32 @@ export class VectorIndex {
   }
 
   async build(rootPath) {
-    if (process.argv.includes('--rebuild')) {
-      await this.index.deleteIndex();
-    }
+    const rebuild = process.argv.includes('--rebuild');
+    if (rebuild) await this.index.deleteIndex();
     await this.index.createIndex();
+    if (!rebuild) this.loadCache();
+
     const files = await this.collectFiles(rootPath);
+    let indexed = 0, skipped = 0;
+
     for (const fp of files) {
       const content = await readFile(fp, 'utf-8');
+      const sha     = this.sha1(content);
+
+      if (!rebuild && this.cache[fp] === sha) {
+        skipped++; continue; // unchanged — skip re-embedding
+      }
+
       for (const chunk of this.chunk(content, fp)) {
         const vector = await this.embedder.embed(chunk.text);
         await this.index.insertItem({ vector, metadata: chunk.metadata });
       }
+      this.cache[fp] = sha;
+      indexed++;
     }
-    return files.length;
+
+    await this.saveCache();
+    return { indexed, skipped, total: files.length };
   }
 
   // Returns file paths + line ranges — NOT raw content
@@ -83,8 +114,8 @@ if (process.argv.includes('--build')) {
     process.env.GITRAILS_VECTOR_INDEX_PATH || './knowledge/vector-index'
   );
   const root = process.argv[process.argv.indexOf('--root') + 1] || './';
-  const count = await idx.build(root);
-  console.log(`gitrails: indexed ${count} files`);
+  const { indexed, skipped, total } = await idx.build(root);
+  console.log(`gitrails: indexed ${indexed} file(s), skipped ${skipped} unchanged  (${total} total)`);
 }
 
 // CLI entry: node retrieval/index.js --query "search text" [--top-k 5]

@@ -49,15 +49,17 @@ jobs:
           GITRAILS_EMBEDDING_MODEL: Xenova/all-MiniLM-L6-v2
 
       - name: Run weekly gitrails audit
-        run: |
-          npx gitclaw --dir . \
-            --prompt "Run a weekly audit of the full repository for security vulnerabilities and documentation gaps" \
-            --session-id "${{ env.SESSION_UUID }}"
+        # Direct Node.js runner — bypasses gitclaw SDK to stay within
+        # Groq free tier limits. Full scan mode: scans entire repo, no diff constraint.
+        run: node scripts/pr-scan.js --full --target ./
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITRAILS_MODEL_HEAVY: ${{ vars.GITRAILS_MODEL_HEAVY || 'groq:llama-3.3-70b-versatile' }}
+          GITRAILS_MODEL_LIGHT: ${{ vars.GITRAILS_MODEL_LIGHT || 'groq:llama-3.1-8b-instant' }}
           GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
           GITRAILS_REPO: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Teardown
         if: always()

@@ -2,9 +2,13 @@
 set -e
 
 echo "gitrails: loading memory..."
-cat knowledge/patterns.md >> memory/runtime/context.md 2>/dev/null || true
-cat knowledge/team-preferences.md >> memory/runtime/context.md 2>/dev/null || true
-cat knowledge/false-positives.md >> memory/runtime/context.md 2>/dev/null || true
+# Clear runtime context for fresh session
+: > memory/runtime/context.md 2>/dev/null || true
+
+# Load knowledge files into context (capped to prevent context bloat)
+head -n 80 knowledge/patterns.md >> memory/runtime/context.md 2>/dev/null || true
+head -n 80 knowledge/team-preferences.md >> memory/runtime/context.md 2>/dev/null || true
+head -n 80 knowledge/false-positives.md >> memory/runtime/context.md 2>/dev/null || true
 
 echo "gitrails: checking vector index..."
 if [ ! -f "knowledge/vector-index/index.json" ]; then
