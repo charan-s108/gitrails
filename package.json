@@ -18,7 +18,7 @@
     "scan:pr": "dotenv -e .env -- node scripts/pr-scan.js --pr",
     "scan:diff": "dotenv -e .env -- node scripts/pr-scan.js --diff HEAD~1..HEAD",
     "scan:full": "dotenv -e .env -- node scripts/pr-scan.js --full",
-    "demo:setup": "node retrieval/index.js --build --rebuild --root ./demo-target && node retrieval/graph.js --build --root ./demo-target",
+    "demo:setup": "node retrieval/index.js --build --rebuild --root ./scenarios/blocked && node retrieval/graph.js --build --root ./scenarios/blocked",
     "demo:sentinel": "dotenv -e .env -- node scripts/demo-scan.js --agent sentinel",
     "demo:reviewer": "dotenv -e .env -- node scripts/demo-scan.js --agent reviewer",
     "demo:scribe": "dotenv -e .env -- node scripts/demo-scan.js --agent scribe",

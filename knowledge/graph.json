@@ -1,36 +1,38 @@
 {
-  "demo-target/src/auth/config.js": {
-    "functions": [],
-    "imports": [],
-    "line_count": "41",
-    "complexity": "2"
-  },
-  "demo-target/src/auth/login.js": {
+  "scenarios/clean/src/api/users.js": {
     "functions": [
-      "getUserFromDb",
-      "validateUser",
-      "createSession",
-      "getAdminData"
+      "isUUID",
+      "isEmail"
     ],
-    "imports": [],
-    "line_count": "58",
-    "complexity": "8"
+    "imports": [
+      "express",
+      "../db/users.js"
+    ],
+    "line_count": "72",
+    "complexity": "18"
   },
-  "demo-target/src/db/queries.js": {
+  "scenarios/clean/src/auth/tokens.js": {
+    "functions": [
+      "generateToken",
+      "sign",
+      "verify"
+    ],
+    "imports": [
+      "crypto"
+    ],
+    "line_count": "40",
+    "complexity": "5"
+  },
+  "scenarios/clean/src/db/users.js": {
     "functions": [
       "getUserById",
       "searchUsers",
-      "hashPassword",
-      "computeFormula"
+      "updateUser"
     ],
-    "imports": [],
-    "line_count": "38",
-    "complexity": "2"
-  },
-  "demo-target/src/routes/api.js": {
-    "functions": [],
-    "imports": [],
-    "line_count": "41",
-    "complexity": "1"
+    "imports": [
+      "./pool.js"
+    ],
+    "line_count": "55",
+    "complexity": "7"
   }
 }
