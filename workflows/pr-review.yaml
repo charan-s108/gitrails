@@ -9,11 +9,6 @@ trigger:
   exclude_branches:
     - "gitrails/session-*"
 
-inputs:
-  pr_diff:
-    type: string
-    required: true
-
 steps:
   - id: bootstrap
     type: hook
@@ -24,6 +19,8 @@ steps:
     type: skill
     skill: triage
     agent: gitrails
+    input:
+      pr_diff: "${inputs.pr_diff}"
     description: "Build scoped dispatch plan via semantic search"
     depends_on: [bootstrap]
     debug: true
