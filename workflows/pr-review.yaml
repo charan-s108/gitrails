@@ -9,6 +9,11 @@ trigger:
   exclude_branches:
     - "gitrails/session-*"
 
+inputs:
+  pr_diff:
+    type: string
+    required: true
+
 steps:
   - id: bootstrap
     type: hook
