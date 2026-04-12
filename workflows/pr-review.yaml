@@ -19,8 +19,6 @@ steps:
     type: skill
     skill: triage
     agent: gitrails
-    input:
-      pr_diff: "${inputs.pr_diff}"
     description: "Build scoped dispatch plan via semantic search"
     depends_on: [bootstrap]
     debug: true
