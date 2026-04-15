@@ -8,7 +8,7 @@ on:
 
 jobs:
   gitrails-review:
-    name: gitrails Security & Quality Review
+    name: "gitrails — Security & Quality Review"
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -27,10 +27,27 @@ jobs:
 
       - run: npm ci
 
-      - name: Run gitrails
+      - name: "gitrails — Run Review"
+        id: gitrails
         run: |
+          echo "## gitrails Review — PR #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Model:** \`groq:moonshotai/kimi-k2-instruct\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Agents Running" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔍 **sentinel** — OWASP A01-A09 + secrets scan" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 **reviewer** — risk scoring (0.35×security + 0.25×bugs + 0.20×complexity)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 **scribe** — changelog + JSDoc (skipped if BLOCKED)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🪞 **mirror** — self-audit conscience" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Output" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
           echo "Review PR #${{ github.event.pull_request.number }} — scan for hardcoded secrets and OWASP vulnerabilities." \
-          | gitclaw --dir .
+          | gitclaw --dir . 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+
+          echo '```' >> $GITHUB_STEP_SUMMARY
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
