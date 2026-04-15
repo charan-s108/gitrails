@@ -16,6 +16,8 @@
 
 ## Recent Sessions
 
+- 2026-04-15 PR #local: BLOCKED 0.85 — 11 finding(s), 1 doc(s)
+
 - 2026-04-15 PR #local: BLOCKED 0.85 — 12 finding(s), 0 doc(s)
 
 <!-- Populated automatically at session end -->
