@@ -6,7 +6,7 @@ author: gitrails-team
 license: MIT
 
 model:
-  preferred: "groq:meta-llama/llama-4-scout-17b-16e-instruct"
+  preferred: "groq:moonshotai/kimi-k2-instruct"
   fallback:
     - "groq:llama-3.3-70b-versatile"
   constraints:
