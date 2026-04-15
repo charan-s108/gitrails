@@ -2,7 +2,7 @@
 name: scan-secrets
 description: "Detects hardcoded credentials, API keys, tokens, and passwords in code changes using semantic search targeting. Covers OWASP A07 Authentication Failures."
 license: MIT
-allowed-tools: Read cli audit-log
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"

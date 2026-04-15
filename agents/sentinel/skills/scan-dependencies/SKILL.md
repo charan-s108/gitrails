@@ -2,7 +2,7 @@
 name: scan-dependencies
 description: "Scans lock files for packages with known CVEs. Covers OWASP A06 Vulnerable and Outdated Components. Reads only lock files, never source files."
 license: MIT
-allowed-tools: Read cli audit-log
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"

@@ -2,7 +2,7 @@
 name: review-diff
 description: "Analyzes PR diff for bugs, logic errors, null pointer risks, race conditions, and missing edge cases using semantic search targeting and code graph traversal."
 license: MIT
-allowed-tools: Read cli audit-log
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"

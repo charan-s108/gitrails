@@ -2,7 +2,7 @@
 name: document-module
 description: "Adds JSDoc or docstrings to changed functions that lack documentation. Reads implementation before writing. Never documents behavior not present in the code."
 license: MIT
-allowed-tools: Read Write cli audit-log
+allowed-tools: read write cli
 metadata:
   author: "gitrails"
   version: "1.0.0"

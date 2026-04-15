@@ -2,7 +2,7 @@
 name: scan-vulnerabilities
 description: "Scans for OWASP Top 10 vulnerabilities (A01-A09) using semantic search targeting. Covers injection, broken access control, misconfiguration, crypto failures, and logging failures."
 license: MIT
-allowed-tools: Read cli audit-log
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"

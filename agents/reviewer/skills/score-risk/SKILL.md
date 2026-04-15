@@ -2,7 +2,7 @@
 name: score-risk
 description: "Computes a weighted risk score (0.0-1.0) from security severity, bug probability, complexity delta, test coverage gap, and documentation debt. Determines PR gate verdict."
 license: MIT
-allowed-tools: Read audit-log
+allowed-tools: read
 metadata:
   author: "gitrails"
   version: "1.0.0"

@@ -2,7 +2,7 @@
 name: generate-changelog
 description: "Generates a CHANGELOG.md entry for the current PR describing user-facing behavioral changes. Based on the actual diff, not the PR description alone."
 license: MIT
-allowed-tools: Read Write cli audit-log
+allowed-tools: read write cli
 metadata:
   author: "gitrails"
   version: "1.0.0"

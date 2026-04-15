@@ -2,7 +2,7 @@
 name: contradiction-check
 description: "Detects rule drift and inconsistent application of detection patterns across the current session. Reports contradictions to dailylog.md without modifying any rules."
 license: MIT
-allowed-tools: Read Write audit-log
+allowed-tools: read write
 metadata:
   author: "gitrails"
   version: "1.0.0"

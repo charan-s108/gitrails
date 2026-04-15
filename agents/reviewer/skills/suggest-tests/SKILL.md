@@ -2,7 +2,7 @@
 name: suggest-tests
 description: "Identifies changed functions without test coverage and suggests specific test cases. Uses semantic search to find test files and code graph to enumerate changed functions."
 license: MIT
-allowed-tools: Read cli audit-log
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"
