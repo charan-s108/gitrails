@@ -10,9 +10,9 @@
  *   node scripts/demo-scan.js [--agent sentinel|reviewer|scribe|mirror|all]
  *
  * npm shortcuts:
- *   npm run demo:sentinel   npm run demo:reviewer
- *   npm run demo:scribe     npm run demo:mirror
- *   npm run demo:all
+ *   npm run agent:sentinel   npm run agent:reviewer
+ *   npm run agent:scribe     npm run agent:mirror
+ *   npm run agent:all
  */
 
 import { execSync } from 'child_process';

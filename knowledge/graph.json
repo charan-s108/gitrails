@@ -1,38 +1,36 @@
 {
-  "scenarios/clean/src/api/users.js": {
-    "functions": [
-      "isUUID",
-      "isEmail"
-    ],
-    "imports": [
-      "express",
-      "../db/users.js"
-    ],
-    "line_count": "72",
-    "complexity": "18"
+  "scenarios/blocked/src/auth/config.js": {
+    "functions": [],
+    "imports": [],
+    "line_count": "25",
+    "complexity": "2"
   },
-  "scenarios/clean/src/auth/tokens.js": {
+  "scenarios/blocked/src/auth/login.js": {
     "functions": [
-      "generateToken",
-      "sign",
-      "verify"
+      "getUserFromDb",
+      "validateUser",
+      "createSession",
+      "getAdminData"
     ],
-    "imports": [
-      "crypto"
-    ],
-    "line_count": "40",
+    "imports": [],
+    "line_count": "39",
     "complexity": "5"
   },
-  "scenarios/clean/src/db/users.js": {
+  "scenarios/blocked/src/db/queries.js": {
     "functions": [
       "getUserById",
       "searchUsers",
-      "updateUser"
+      "hashPassword",
+      "computeFormula"
     ],
-    "imports": [
-      "./pool.js"
-    ],
-    "line_count": "55",
-    "complexity": "7"
+    "imports": [],
+    "line_count": "34",
+    "complexity": "1"
+  },
+  "scenarios/blocked/src/routes/api.js": {
+    "functions": [],
+    "imports": [],
+    "line_count": "31",
+    "complexity": "0"
   }
 }
