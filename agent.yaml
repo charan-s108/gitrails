@@ -6,9 +6,9 @@ author: gitrails-team
 license: MIT
 
 model:
-  preferred: "${GITRAILS_MODEL}"
+  preferred: "groq:llama-3.1-8b-instant"
   fallback:
-    - "${GITRAILS_FALLBACK_MODEL}"
+    - "groq:llama-3.3-70b-versatile"
   constraints:
     temperature: 0.2
     max_tokens: 8192
