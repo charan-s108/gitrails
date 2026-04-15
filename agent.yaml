@@ -1,14 +1,14 @@
 spec_version: "0.1.0"
 name: gitrails
-version: 1.0.0
+version: "1.0.0"
 description: "Self-aware, learning engineering teammate — reviews PRs, scans security, generates docs, and grows smarter through human-approved memory and semantic code retrieval."
 author: gitrails-team
 license: MIT
 
 model:
-  preferred: "groq:llama-3.3-70b-versatile"
+  preferred: "${GITRAILS_MODEL}"
   fallback:
-    - "groq:llama-3.1-8b-instant"
+    - "${GITRAILS_FALLBACK_MODEL}"
   constraints:
     temperature: 0.2
     max_tokens: 8192
@@ -28,24 +28,6 @@ skills:
   - triage
   - dispatch
   - synthesize
-
-agents:
-  sentinel:
-    description: "Security scanner — OWASP A01-A09, secrets, dependencies"
-    delegation:
-      mode: auto
-  reviewer:
-    description: "Code quality reviewer — risk scoring, diff analysis, test suggestions"
-    delegation:
-      mode: auto
-  scribe:
-    description: "Documentation writer — changelog and module docs"
-    delegation:
-      mode: auto
-  mirror:
-    description: "Self-auditor — post-session accuracy review and learning proposals"
-    delegation:
-      mode: auto
 
 delegation:
   mode: auto

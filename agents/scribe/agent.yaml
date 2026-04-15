@@ -1,6 +1,6 @@
 spec_version: "0.1.0"
 name: scribe
-version: 1.0.0
+version: "1.0.0"
 description: "Documentation writer — generates changelog entries and module documentation for changed code. Never invents behavior not present in the code."
 author: gitrails-team
 license: MIT
