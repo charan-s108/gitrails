@@ -53,8 +53,8 @@ A multi-agent AI code review system built on the **gitagent spec v0.1.0**, runti
 | Layer | Choice | Why |
 |-------|--------|-----|
 | Agent runtime | gitclaw | The spec runtime — `npm install -g gitclaw` |
-| Model (primary) | groq:llama-3.1-8b-instant | Fast, handles 95% of cases on free tier |
-| Model (fallback) | groq:llama-3.3-70b-versatile | Larger context when primary fails |
+| Model (primary) | groq:moonshotai/kimi-k2-instruct | 10K TPM free tier, excellent instruction following, strong function calling |
+| Model (fallback) | groq:llama-3.3-70b-versatile | Fallback if kimi-k2 unavailable |
 | Language | Node.js 18+ ESM | gitclaw requires it |
 | Secrets | `.env` only | Never hardcoded |
 
@@ -690,7 +690,7 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITRAILS_MODEL: groq:llama-3.1-8b-instant
+          GITRAILS_MODEL: groq:moonshotai/kimi-k2-instruct
           GITRAILS_FALLBACK_MODEL: groq:llama-3.3-70b-versatile
           GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}
           GITRAILS_REPO: ${{ github.repository }}
@@ -731,7 +731,7 @@ jobs:
 ```
 GROQ_API_KEY=your-groq-api-key-here
 GITHUB_TOKEN=your-github-pat-here
-GITRAILS_MODEL=groq:llama-3.1-8b-instant
+GITRAILS_MODEL=groq:moonshotai/kimi-k2-instruct
 GITRAILS_FALLBACK_MODEL=groq:llama-3.3-70b-versatile
 ```
 
@@ -879,4 +879,4 @@ git push origin demo/vuln-scan
 
 ---
 
-*gitrails — GitAgent Hackathon 2026 · gitagent spec v0.1.0 · gitclaw · groq:llama-3.1-8b-instant (primary) · $0*
+*gitrails — GitAgent Hackathon 2026 · gitagent spec v0.1.0 · gitclaw · groq:moonshotai/kimi-k2-instruct (primary) · $0*
