@@ -45,7 +45,7 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
 
           echo "Review PR #${{ github.event.pull_request.number }} — scan for hardcoded secrets and OWASP vulnerabilities." \
-          | gitclaw --dir . 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          | npx gitclaw --dir . 2>&1 | tee -a $GITHUB_STEP_SUMMARY
 
           echo '```' >> $GITHUB_STEP_SUMMARY
         env:
