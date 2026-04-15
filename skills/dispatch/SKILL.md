@@ -15,9 +15,9 @@ metadata:
 ## Instructions
 
 1. Extract the PR number or diff reference from the prompt context.
-2. Run the production scanner using the cli tool:
-   - For a PR: `node scripts/pr-scan.js --pr <PR_NUMBER>`
-   - For a local diff: `node scripts/pr-scan.js --diff HEAD~1..HEAD`
-   - For a full scan: `node scripts/pr-scan.js --full`
+2. Run the production scanner using the cli tool (always add `--no-fail` so gitclaw sees the full output):
+   - For a PR: `node scripts/pr-scan.js --pr <PR_NUMBER> --no-fail`
+   - For a local diff: `node scripts/pr-scan.js --diff HEAD~1..HEAD --no-fail`
+   - For a full scan: `node scripts/pr-scan.js --full --no-fail`
 3. The scanner runs all four agents (sentinel, reviewer, scribe, mirror) internally, posts the PR comment, sets the GitHub Check, and writes session memory.
-4. Report the exit code and verdict to synthesize.
+4. Read the verdict from the output (APPROVED / NEEDS_REVIEW / BLOCKED) and report it to the user.

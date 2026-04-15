@@ -236,6 +236,7 @@ const ARGV     = process.argv.slice(2);
 const PR_NUM   = ARGV.includes('--pr')   ? ARGV[ARGV.indexOf('--pr') + 1]   : null;
 const DIFF_REF = ARGV.includes('--diff') ? ARGV[ARGV.indexOf('--diff') + 1] : null;
 const FULL     = ARGV.includes('--full');
+const NO_FAIL  = ARGV.includes('--no-fail');  // exit 0 even on BLOCKED (for gitclaw dispatch)
 const TARGET   = ARGV.includes('--target') ? ARGV[ARGV.indexOf('--target') + 1] : './';
 const SESSION  = process.env.GITRAILS_SESSION_ID || 'local';
 
@@ -797,7 +798,7 @@ async function main() {
   if (cached) {
     ok('Cache hit — skipping API calls');
     renderSummary(cached.sentinel, cached.reviewer, cached.scribe, cached.mirror);
-    process.exit(cached.reviewer.verdict === 'BLOCKED' ? 1 : 0);
+    process.exit(cached.reviewer.verdict === 'BLOCKED' && !NO_FAIL ? 1 : 0);
   }
 
   // Phase 2 — triage (zero LLM calls)
@@ -840,8 +841,8 @@ async function main() {
   // Render terminal summary
   renderSummary(sentinel, reviewer, scribe, mirror);
 
-  // Exit code — BLOCKED = 1 (fails CI)
-  if (reviewer.verdict === 'BLOCKED') {
+  // Exit code — BLOCKED = 1 (fails CI); --no-fail suppresses for gitclaw dispatch
+  if (reviewer.verdict === 'BLOCKED' && !NO_FAIL) {
     fail(`Exiting 1 — verdict BLOCKED (risk ${reviewer.riskScore.toFixed(2)})`);
     process.exit(1);
   }
