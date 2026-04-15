@@ -1,8 +1,8 @@
 ---
 name: run-scribe
-description: "Invokes scribe to generate changelog entries and JSDoc for changed functions. Skip if verdict is BLOCKED."
+description: "Invokes scribe sub-agent via cli to generate changelog entries and JSDoc. Skip if verdict is BLOCKED."
 license: MIT
-allowed-tools: read
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"
@@ -13,5 +13,11 @@ metadata:
 # Run Scribe
 
 Skip entirely if verdict is BLOCKED.
-Invoke the scribe sub-agent. Pass list of changed files with public functions.
-Collect: changelog entry + list of documented functions.
+
+Use the `cli` tool to run this exact command:
+
+```
+gitclaw --dir agents/scribe -p "Generate a changelog entry and JSDoc comments for the changed functions in this PR diff."
+```
+
+Collect output: changelog entry + list of documented functions.

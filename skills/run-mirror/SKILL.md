@@ -1,8 +1,8 @@
 ---
 name: run-mirror
-description: "Invokes mirror for post-session self-audit. Mirror checks accuracy and proposes learning PRs. Always runs last."
+description: "Invokes mirror sub-agent via cli for post-session self-audit. Always runs last."
 license: MIT
-allowed-tools: read
+allowed-tools: read cli
 metadata:
   author: "gitrails"
   version: "1.0.0"
@@ -13,6 +13,12 @@ metadata:
 # Run Mirror
 
 Always invoke mirror after all other agents complete.
-Pass the full session summary: all findings, verdicts, agent outputs.
-Mirror audits accuracy and may propose a PR to `knowledge/false-positives.md`.
-Mirror never merges its own PR — human approval required.
+
+Use the `cli` tool to run this exact command:
+
+```
+gitclaw --dir agents/mirror -p "Audit this session for accuracy. Review the security findings and risk score. Propose updates to knowledge/false-positives.md if any findings were wrong."
+```
+
+Mirror may propose a PR to `knowledge/false-positives.md`.
+Mirror NEVER merges its own PR — human approval required.
