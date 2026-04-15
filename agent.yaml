@@ -25,9 +25,7 @@ runtime:
   timeout: 120
 
 skills:
-  - triage
-  - dispatch
-  - synthesize
+  - review-pr
 
 delegation:
   mode: auto
