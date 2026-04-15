@@ -1,7 +1,8 @@
 #!/bin/bash
-set -e
+# Drain stdin — gitclaw writes session data to hook stdin; must read before exiting
+INPUT=$(cat)
 
 # Clear stale runtime context from previous session
 : > memory/runtime/context.md 2>/dev/null || true
 
-echo '{ "action": "allow" }'
+printf '{ "action": "allow" }'
