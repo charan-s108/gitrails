@@ -24,6 +24,10 @@ skills:
   - scan-vulnerabilities
   - scan-dependencies
 
+runtime:
+  max_turns: 20
+  timeout: 120
+
 compliance:
   role: analyzer
   permissions: [read, analyze]

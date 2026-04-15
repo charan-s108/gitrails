@@ -23,6 +23,10 @@ skills:
   - propose-learning
   - contradiction-check
 
+runtime:
+  max_turns: 20
+  timeout: 120
+
 compliance:
   role: auditor
   permissions: [audit, propose]
