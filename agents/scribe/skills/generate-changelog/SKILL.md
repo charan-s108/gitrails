@@ -2,7 +2,7 @@
 name: generate-changelog
 description: "Generates a CHANGELOG.md entry for the current PR describing user-facing behavioral changes. Based on the actual diff, not the PR description alone."
 license: MIT
-allowed-tools: Read Write cli audit-log
+allowed-tools: read write cli
 metadata:
   author: "gitrails"
   version: "1.0.0"
@@ -27,10 +27,8 @@ Step 1 — Use diff metadata (no file reads needed):
   → use this to identify what categories of change occurred
 
 Step 2 — Read only changed API/export surfaces:
-  cli: node retrieval/index.js --query "export function public API interface endpoint route handler"
-  → returns JSON [{ file, start_line, end_line, score }]
-  cli: sed -n '<start_line>,<end_line>p' <file>
-  → read only exported/public interface changes
+  Read `knowledge/graph.json` — get function list for changed files.
+  Use `cli` to run `git show HEAD:<file>` for specific line ranges of public/exported functions only.
 
 Step 3 — Read existing CHANGELOG.md:
   Read CHANGELOG.md (full — usually small, needed to prepend entry)
@@ -41,8 +39,8 @@ Zero reads of internal implementation files for changelog generation.
 ## Instructions
 
 1. From dispatch plan: get changed files and PR metadata (title, number, author)
-2. Run `cli: node retrieval/index.js --query "export function public API interface"` to find changed public API surfaces
-3. For each result with score > 0.6: `cli: sed -n '<start>,<end>p' <file>`
+2. Read `knowledge/graph.json` — identify public/exported functions in changed files.
+3. For each changed public function: read only its line range from the diff.
 4. Categorize changes:
    - `Added` — new features, new endpoints, new exported functions
    - `Changed` — modified behavior of existing features

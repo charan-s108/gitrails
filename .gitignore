@@ -1,17 +1,16 @@
 # Secrets — never commit
 .env
 
-# Runtime state
+# Dependencies
 node_modules/
-.gitagent/
 
-# Runtime memory — populated at session start, cleared at teardown; never commit
+# Runtime state — cleared each session
+.gitagent/
 memory/runtime/context.md
 memory/runtime/dailylog.md
 
-# Vector index — rebuilt automatically on bootstrap, too large to commit
-knowledge/vector-index/
-!knowledge/vector-index/.gitkeep
+# Cache
+.cache/
 
 # OS
 .DS_Store

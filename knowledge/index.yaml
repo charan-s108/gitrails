@@ -1,22 +1,27 @@
 documents:
   - path: patterns.md
-    tags: [patterns, team, coding-style]
+    tags: [patterns, detection-rules, owasp]
+    priority: high
+    always_load: true
+  - path: false-positives.md
+    tags: [suppressions, false-positives]
     priority: high
     always_load: true
   - path: team-preferences.md
     tags: [preferences, review-style]
-    priority: high
+    priority: medium
     always_load: true
-  - path: false-positives.md
-    tags: [false-positives, suppressions]
+  - path: graph.json
+    tags: [code-graph, functions, complexity, hotspots]
     priority: high
-    always_load: true
-  - path: codebase-map.md
-    tags: [architecture, overview]
+    always_load: false
+    description: "Code relationship graph — file → functions, imports, complexity. Read per-skill via `read` tool to scope what to scan."
+  - path: vector-index/index.json
+    tags: [semantic-index, pattern-embeddings]
     priority: medium
     always_load: false
-  - path: graph.json
-    tags: [code-graph, structure, functions, hotspots]
-    priority: high
-    always_load: true
-    description: "Code graph adjacency list — query via retrieval/graph.js, never read raw"
+    description: "Semantic pattern index — populated as findings accumulate. Queried via semantic-search tool."
+  - path: codebase-map.md
+    tags: [architecture, overview]
+    priority: low
+    always_load: false

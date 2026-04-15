@@ -1,6 +1,6 @@
 spec_version: "0.1.0"
 name: sentinel
-version: 1.0.0
+version: "1.0.0"
 description: "Security scanner — detects OWASP Top 10 vulnerabilities, hardcoded secrets, and vulnerable dependencies using semantic search for precision targeting."
 author: gitrails-team
 license: MIT

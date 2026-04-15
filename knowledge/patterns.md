@@ -4,6 +4,23 @@
 > Updated via human-approved mirror PRs only.
 > Loaded at bootstrap into runtime context.
 
+## How Vector Search + Knowledge Graph Are Used
+
+Skills MUST call `semantic-search` before reading any file. The vector index
+(`knowledge/vector-index/index.json`) stores embeddings of past findings and
+patterns so the model can pinpoint the exact lines that need reading —
+keeping context within the 8b model's token budget.
+
+The code graph (`knowledge/graph.json`) maps file → functions, imports, and
+complexity. reviewer reads the graph to find hotspots and call sites without
+loading entire files.
+
+Workflow for every skill:
+1. Query semantic-search with the pattern type (e.g. "hardcoded AWS key")
+2. Receive back: `{ file, line_start, line_end, score }` — read ONLY that range
+3. Cross-reference `knowledge/false-positives.md` before raising any finding
+4. Update `knowledge/graph.json` entry if a new file/function is encountered
+
 ## Credential Patterns
 
 ### hardcoded-api-key

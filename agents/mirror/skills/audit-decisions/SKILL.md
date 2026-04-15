@@ -2,7 +2,7 @@
 name: audit-decisions
 description: "Reviews all findings from the current session against known false-positives and patterns to assess accuracy. Writes an audit summary to memory/runtime/dailylog.md."
 license: MIT
-allowed-tools: Read Write audit-log
+allowed-tools: read write
 metadata:
   author: "gitrails"
   version: "1.0.0"

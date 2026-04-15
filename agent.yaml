@@ -1,7 +1,7 @@
 spec_version: "0.1.0"
 name: gitrails
-version: 1.0.0
-description: "Self-aware, learning engineering teammate — reviews PRs, scans security, generates docs, and grows smarter through human-approved memory and semantic code retrieval."
+version: "1.0.0"
+description: "Self-aware, learning engineering teammate — reviews PRs, scans security, generates docs, and grows smarter through human-approved memory."
 author: gitrails-team
 license: MIT
 
@@ -25,30 +25,11 @@ runtime:
   timeout: 120
 
 skills:
-  - triage
-  - dispatch
-  - synthesize
-
-agents:
-  sentinel:
-    description: "Security scanner — OWASP A01-A09, secrets, dependencies"
-    delegation:
-      mode: auto
-  reviewer:
-    description: "Code quality reviewer — risk scoring, diff analysis, test suggestions"
-    delegation:
-      mode: auto
-  scribe:
-    description: "Documentation writer — changelog and module docs"
-    delegation:
-      mode: auto
-  mirror:
-    description: "Self-auditor — post-session accuracy review and learning proposals"
-    delegation:
-      mode: auto
-
-delegation:
-  mode: auto
+  - review-pr
+  - run-sentinel
+  - run-reviewer
+  - run-scribe
+  - run-mirror
 
 compliance:
   risk_tier: high
@@ -64,7 +45,7 @@ compliance:
   recordkeeping:
     audit_logging: true
     log_format: structured_json
-    retention_period: 90d
+    retention_period: "90d"
     log_contents:
       - prompts_and_responses
       - tool_calls
@@ -115,5 +96,4 @@ tags:
   - security
   - multi-agent
   - self-learning
-  - semantic-search
   - gitagent-2026

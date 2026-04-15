@@ -16,55 +16,25 @@ jobs:
       checks: write
 
     steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Create session branch
+      - name: Run gitrails
         run: |
-          SESSION_UUID=$(node -e "console.log(require('crypto').randomUUID().slice(0,8))")
-          SESSION_BRANCH="gitrails/session-${SESSION_UUID}"
-          echo "SESSION_BRANCH=${SESSION_BRANCH}" >> $GITHUB_ENV
-          echo "SESSION_UUID=${SESSION_UUID}" >> $GITHUB_ENV
-          git checkout -b "$SESSION_BRANCH"
-
-      - name: Bootstrap gitrails
-        run: bash hooks/scripts/bootstrap.sh
+          echo "Review PR #${{ github.event.pull_request.number }} — scan for hardcoded secrets and OWASP vulnerabilities." \
+          | gitclaw --dir .
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
-          GITRAILS_MODEL_HEAVY: ${{ vars.GITRAILS_MODEL_HEAVY || 'groq:llama-3.3-70b-versatile' }}
-          GITRAILS_MODEL_LIGHT: ${{ vars.GITRAILS_MODEL_LIGHT || 'groq:llama-3.1-8b-instant' }}
-
-      - name: Run gitrails production scan
-        # Direct Node.js runner — bypasses gitclaw SDK to stay within Groq free tier token limits.
-        # Architecture: diff-first → retrieval gate → agent chain → structured handoffs → PR comment + Check.
-        run: node scripts/pr-scan.js --pr ${{ github.event.pull_request.number }}
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITRAILS_MODEL_HEAVY: ${{ vars.GITRAILS_MODEL_HEAVY || 'groq:llama-3.3-70b-versatile' }}
-          GITRAILS_MODEL_LIGHT: ${{ vars.GITRAILS_MODEL_LIGHT || 'groq:llama-3.1-8b-instant' }}
-          GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}
+          GITRAILS_MODEL: groq:llama-3.1-8b-instant
+          GITRAILS_FALLBACK_MODEL: groq:llama-3.3-70b-versatile
           GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}
           GITRAILS_REPO: ${{ github.repository }}
-          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
-
-      - name: Teardown
-        if: always()
-        run: |
-          export GITRAILS_TEARDOWN_REASON="${{ job.status == 'success' && 'clean' || 'error' }}"
-          bash hooks/scripts/teardown.sh
-        env:
-          GITRAILS_SESSION_ID: ${{ env.SESSION_UUID }}

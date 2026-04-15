@@ -1,6 +1,6 @@
 spec_version: "0.1.0"
 name: mirror
-version: 1.0.0
+version: "1.0.0"
 description: "gitrails' conscience — audits its own decisions, detects drift, and proposes learning updates via human-approved PRs. Runs after all other agents complete."
 author: gitrails-team
 license: MIT
@@ -12,6 +12,11 @@ model:
   constraints:
     temperature: 0.3
     max_tokens: 8192
+
+tools:
+  - git-read
+  - git-write
+  - audit-log
 
 skills:
   - audit-decisions
