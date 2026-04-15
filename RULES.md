@@ -6,3 +6,6 @@
 - ANY CRITICAL finding → immediate PR block regardless of risk score
 - Risk < 0.3 → approved · 0.3–0.7 → needs-review · > 0.7 → blocked
 - on_error hook MUST fire on crash — no silent failures ever
+- GRAPH FIRST: read `knowledge/graph.json` to find what file + line range you need — then read only those lines with `offset`+`limit`
+- NEVER read full files unless under 30 lines — always use offset+limit
+- EVERY grep command MUST include `--exclude-dir=node_modules --exclude-dir=.gitagent --exclude=package-lock.json`

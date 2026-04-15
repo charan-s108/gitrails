@@ -1,13 +1,18 @@
 ---
 name: scan-vulnerabilities
-description: "Scans for OWASP A01-A09 vulnerabilities. Covers injection, broken access control, misconfiguration, crypto failures, and logging failures."
+description: Scans for OWASP A01-A09 vulnerabilities. Covers injection, broken access control, misconfiguration, crypto failures, and logging failures.
 license: MIT
 allowed-tools: read cli
 metadata:
-  author: "gitrails"
-  version: "1.0.0"
-  category: "security"
-  risk_tier: "high"
+  author: gitrails
+  version: 1.0.0
+  category: security
+  risk_tier: high
+confidence: 1
+usage_count: 1
+success_count: 1
+failure_count: 0
+negative_examples: []
 ---
 
 # scan-vulnerabilities

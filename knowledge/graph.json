@@ -1,1 +1,117 @@
-{}
+{
+  "meta": {
+    "version": "1.0",
+    "indexed_at": "2026-04-16",
+    "repo": "gitrails",
+    "total_files": 68,
+    "exclude_always": ["node_modules/", ".gitagent/", "package-lock.json", "*.min.js", "dist/"]
+  },
+  "files": {
+    "agent.yaml": {
+      "lines": 99,
+      "type": "config",
+      "description": "Root agent: model, skills (review-pr, run-sentinel, run-reviewer, run-scribe, run-mirror), compliance SOD",
+      "read_if": "need root agent config or compliance settings"
+    },
+    "RULES.md": {
+      "lines": 9,
+      "type": "rules",
+      "description": "6 hard rules: no writes to main/master, redact secrets, CRITICAL→block, risk thresholds 0.3/0.7",
+      "read_if": "need to verify rule thresholds"
+    },
+    "skills/review-pr/SKILL.md": {
+      "lines": 23,
+      "type": "skill",
+      "description": "Entry point: git diff → scan → invoke sub-agents → verdict",
+      "read_if": "always read first on PR review"
+    },
+    "skills/run-sentinel/SKILL.md": {
+      "lines": 19,
+      "type": "skill",
+      "description": "Invoke sentinel for OWASP A01-A09 + secrets. CRITICAL finding → BLOCKED",
+      "read_if": "before delegating to sentinel"
+    },
+    "skills/run-reviewer/SKILL.md": {
+      "lines": 18,
+      "type": "skill",
+      "description": "Invoke reviewer for risk score: 0.35×security + 0.25×bugs + 0.20×complexity + 0.10×tests + 0.10×docs",
+      "read_if": "before delegating to reviewer"
+    },
+    "skills/run-scribe/SKILL.md": {
+      "lines": 18,
+      "type": "skill",
+      "description": "Invoke scribe for changelog + JSDoc. Skip entirely if verdict is BLOCKED",
+      "read_if": "before delegating to scribe, skip if BLOCKED"
+    },
+    "skills/run-mirror/SKILL.md": {
+      "lines": 19,
+      "type": "skill",
+      "description": "Invoke mirror last — self-audit, may propose learning PR, never self-merges",
+      "read_if": "after all other agents complete"
+    },
+    "agents/sentinel/skills/scan-secrets/SKILL.md": {
+      "lines": 23,
+      "type": "skill",
+      "description": "Secret scan: AKIA, sk-, ghp_, password=, api_key. Excludes .env.example, *.test.*",
+      "read_if": "inside sentinel context only"
+    },
+    "agents/sentinel/skills/scan-vulnerabilities/SKILL.md": {
+      "lines": 23,
+      "type": "skill",
+      "description": "OWASP A01-A09: injection, access control, misconfig, crypto failures",
+      "read_if": "inside sentinel context only"
+    },
+    "agents/sentinel/skills/scan-dependencies/SKILL.md": {
+      "lines": 18,
+      "type": "skill",
+      "description": "Dependency CVE scan via package.json + lock files",
+      "read_if": "inside sentinel context only"
+    },
+    "agents/reviewer/skills/score-risk/SKILL.md": {
+      "lines": 26,
+      "type": "skill",
+      "description": "Risk formula output: APPROVED (<0.3) / NEEDS_REVIEW (0.3-0.7) / BLOCKED (>0.7)",
+      "read_if": "inside reviewer context only"
+    },
+    "agents/mirror/skills/propose-learning/SKILL.md": {
+      "lines": 24,
+      "type": "skill",
+      "description": "Proposes knowledge/ updates via PR. 3-strikes rule. NEVER self-merges",
+      "read_if": "inside mirror context only"
+    },
+    "knowledge/false-positives.md": {
+      "lines": 12,
+      "type": "knowledge",
+      "description": "Suppressed patterns — check BEFORE raising any finding",
+      "read_if": "always, before raising any finding"
+    },
+    "knowledge/patterns.md": {
+      "lines": 89,
+      "type": "knowledge",
+      "description": "Regex detection patterns by category",
+      "sections": {
+        "credentials": "lines 24-38",
+        "injection": "lines 40-58",
+        "crypto": "lines 60-78",
+        "misconfig": "lines 80-89"
+      },
+      "read_if": "read the specific section only — use sections map, NOT the whole file"
+    },
+    "knowledge/team-preferences.md": {
+      "lines": 38,
+      "type": "knowledge",
+      "description": "Team review preferences: severity thresholds, output format, suppression policy",
+      "read_if": "when formatting output or deciding severity"
+    }
+  },
+  "hotspots": {
+    "CLAUDE.md": { "lines": 882, "skip": true, "reason": "Human spec only — too large, no value at review time" },
+    "README.md": { "lines": 558, "skip": true, "reason": "Human docs only" },
+    "package-lock.json": { "skip": true, "reason": "Binary-equivalent, no review value" },
+    "node_modules/": { "skip": true, "reason": "Third-party code, excluded from all scans" }
+  },
+  "scan_exclusions": {
+    "grep_flags": "--exclude-dir=node_modules --exclude-dir=.gitagent --exclude-dir=dist --exclude-dir=.git --exclude=package-lock.json --include='*.{js,ts,py,go,java,yaml,yml,json,sh}'",
+    "note": "ALWAYS append these flags to every grep command — never run bare grep -r"
+  }
+}
