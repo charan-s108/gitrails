@@ -7,3 +7,5 @@ hooks:
 audit:
   enabled: true
   path: ".gitagent/audit.jsonl"
+learning:
+  skill_crystallization: false
