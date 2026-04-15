@@ -17,9 +17,9 @@ negative_examples: []
 
 # scan-vulnerabilities
 
-1. Read `knowledge/patterns.md` — load OWASP pattern definitions into context.
-2. Read `knowledge/false-positives.md` — load suppressions.
-3. Read `knowledge/graph.json` — identify which changed files are in auth/db/route paths (higher risk).
+1. Read `../../knowledge/patterns.md` — load OWASP pattern definitions into context.
+2. Read `../../knowledge/false-positives.md` — load suppressions.
+3. Read `../../knowledge/graph.json` — identify which changed files are in auth/db/route paths (higher risk).
 4. From the diff: read ONLY changed line ranges, prioritising high-complexity files from graph.
 5. Scan each range for:
    - A01: missing auth middleware, direct object reference without check

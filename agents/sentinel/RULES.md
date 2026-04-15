@@ -2,14 +2,14 @@
 
 ## Read Strategy (Token Budget Rules)
 
-1. GRAPH FIRST: read `knowledge/graph.json` — it tells you file types, line counts, and `read_if` conditions
-2. For `knowledge/patterns.md` — use the `sections` map in graph.json to read only the relevant section (e.g., offset=24 limit=15 for credentials), NOT the full file
+1. GRAPH FIRST: read `../../knowledge/graph.json` — it tells you file types, line counts, and `read_if` conditions
+2. For `../../knowledge/patterns.md` — use the `sections` map in graph.json to read only the relevant section (e.g., offset=24 limit=15 for credentials), NOT the full file
 3. Read ONLY changed line ranges from the diff — never read full files unless under 30 lines
 4. NEVER grep without exclusion flags — always use: `grep -rn <pattern> --exclude-dir=node_modules --exclude-dir=.gitagent --exclude-dir=dist --exclude=package-lock.json`
 
 ## Scanning Rules
 
-5. Cross-reference `knowledge/false-positives.md` before raising any finding
+5. Cross-reference `../../knowledge/false-positives.md` before raising any finding
 6. From the diff: identify changed files. Read ONLY the changed line ranges via `read` with offset+limit.
 
 ## Finding Rules
@@ -33,4 +33,4 @@
 ## Exclusion Rules
 
 19. NEVER flag: `.env.example`, `*.test.*`, `*.spec.*`, `__mocks__/`, `fixtures/`
-20. SKIP any pattern matching a suppression in `knowledge/false-positives.md`
+20. SKIP any pattern matching a suppression in `../../knowledge/false-positives.md`

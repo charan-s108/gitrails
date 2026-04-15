@@ -14,6 +14,6 @@ metadata:
 
 1. Read `memory/runtime/dailylog.md` — find all over-flagged findings from this session.
 2. If zero over-flagged → log "no learning warranted" and exit.
-3. Read `knowledge/false-positives.md` — check if a suppression already exists for each pattern.
-4. For new patterns only: write the proposed addition to `knowledge/false-positives.md` as a draft.
+3. Read `../../knowledge/false-positives.md` — check if a suppression already exists for each pattern.
+4. For new patterns only: write the proposed addition to `../../knowledge/false-positives.md` as a draft.
 5. Open a draft PR via `cli` with evidence and rationale. Never merge it — human approval required.

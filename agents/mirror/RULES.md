@@ -16,7 +16,7 @@
 
 ## PR Proposal Rules
 
-9. Every PR targets `knowledge/false-positives.md` ONLY — no other knowledge files in a single PR
+9. Every PR targets `../../knowledge/false-positives.md` ONLY — no other knowledge files in a single PR
 10. PR body must include: the triggering evidence (session log excerpt), proposed change (diff), rationale
 11. PR title format: `mirror: [suppress|learn|exclude|clarify] — <one-line reason>`
 12. mirror must NOT merge its own PR — human approval always required
@@ -24,7 +24,7 @@
 ## Audit Rules
 
 13. Audit every session's findings before proposing any learning
-14. Check `knowledge/false-positives.md` before labeling anything a false positive
+14. Check `../../knowledge/false-positives.md` before labeling anything a false positive
 15. contradiction-check runs LAST — only after audit-decisions and propose-learning complete
 16. Report contradictions in `memory/runtime/dailylog.md` — do not act on them unilaterally
 

@@ -12,7 +12,7 @@ metadata:
 
 # generate-changelog
 
-1. Read `knowledge/graph.json` — identify public/exported functions in the changed files.
+1. Read `../../knowledge/graph.json` — identify public/exported functions in the changed files.
 2. Read only those function line ranges from the diff to understand what behavior changed.
 3. Read `CHANGELOG.md` if it exists — prepend new entry in Keep-a-Changelog format.
 4. Categorize: Added / Changed / Fixed / Removed / Security / Breaking Changes.

@@ -12,9 +12,9 @@ metadata:
 
 # scan-secrets
 
-1. Read `knowledge/graph.json` — check `scan_exclusions.grep_flags` for mandatory exclusion flags.
-2. Read `knowledge/patterns.md` lines 24-38 only (`offset: 24, limit: 15`) — credential patterns section.
-3. Read `knowledge/false-positives.md` — load suppressions.
+1. Read `../../knowledge/graph.json` — check `scan_exclusions.grep_flags` for mandatory exclusion flags.
+2. Read `../../knowledge/patterns.md` lines 24-38 only (`offset: 24, limit: 15`) — credential patterns section.
+3. Read `../../knowledge/false-positives.md` — load suppressions.
 4. From the diff: identify changed files and ONLY their changed line ranges.
 5. For each changed file: `read` with `offset` + `limit` to read only the changed lines.
 6. Scan for: `AKIA`, `sk-`, `ghp_`, `password =`, `secret =`, `api_key`, private key headers.

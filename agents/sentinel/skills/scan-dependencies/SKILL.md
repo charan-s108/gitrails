@@ -23,5 +23,5 @@ metadata:
    - `axios` < 1.6.0 — SSRF, credential exposure
    - `express` < 4.18.0 — multiple security fixes
 5. Flag any package newly added in this PR as requiring review.
-6. Cross-reference `knowledge/false-positives.md` for suppressed packages.
+6. Cross-reference `../../knowledge/false-positives.md` for suppressed packages.
 7. Output per finding: `finding_id`, `severity`, `owasp: A06`, `package`, `version`, `cve`, `recommendation`.

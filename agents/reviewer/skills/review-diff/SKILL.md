@@ -12,7 +12,7 @@ metadata:
 
 # review-diff
 
-1. Read `knowledge/graph.json` — identify which changed files have highest complexity scores. Prioritise those.
+1. Read `../../knowledge/graph.json` — identify which changed files have highest complexity scores. Prioritise those.
 2. From the diff: read ONLY changed line ranges from high-complexity files first.
 3. Scan each range for:
    - `null-dereference` — property access on potentially null/undefined
@@ -22,5 +22,5 @@ metadata:
    - `race-condition` — shared mutable state in concurrent async paths
    - `logic-error` — inverted condition or impossible branch
 4. For each finding: record `file`, `line`, `type`, `description`, `recommendation`.
-5. Update `knowledge/graph.json` entry if a new file/function appears in the diff.
+5. Update `../../knowledge/graph.json` entry if a new file/function appears in the diff.
 6. Pass finding list to `score-risk`.

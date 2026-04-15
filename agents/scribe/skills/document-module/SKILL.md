@@ -12,7 +12,7 @@ metadata:
 
 # document-module
 
-1. Read `knowledge/graph.json` — get function names and line ranges for each changed file.
+1. Read `../../knowledge/graph.json` — get function names and line ranges for each changed file.
 2. For each public function: read 5 lines before it to check for existing `/**` or `"""` — skip if documented.
 3. Skip: private (`_prefix`, `#`), trivial under 3 lines, or unchanged functions.
 4. Read the function body. Write JSDoc (`@param`, `@returns`, `@throws`) or Google docstring based only on what the code does.
