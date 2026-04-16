@@ -12,7 +12,7 @@ metadata:
 
 # Review PR
 
-1. Run `git diff HEAD~1 2>/dev/null || git show HEAD` via `cli`. Redact any secrets as `[REDACTED]`.
+1. Run `git diff origin/main...HEAD 2>/dev/null || git diff HEAD~1 2>/dev/null || git show HEAD` via `cli` to get the full PR diff. Redact any secrets as `[REDACTED]`.
 2. Run sentinel — read `skills/run-sentinel/SKILL.md` and invoke via `cli`.
 3. **GATE**: If sentinel returns ANY finding with `severity: CRITICAL` → verdict is **BLOCKED**. Output the verdict and STOP. Do NOT invoke reviewer, scribe, or mirror.
 4. If no CRITICAL findings → run reviewer — read `skills/run-reviewer/SKILL.md` and invoke via `cli`.

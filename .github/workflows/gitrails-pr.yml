@@ -57,7 +57,7 @@ jobs:
             set pr_num $env(PR_NUM)
             spawn npx gitclaw --dir .
             expect "→ "
-            send "Review PR #$pr_num — scan for hardcoded secrets and OWASP vulnerabilities.\n"
+            send "Review PR #$pr_num — run git diff origin/main...HEAD to get the changed files, then scan for hardcoded secrets and OWASP vulnerabilities.\n"
             expect -timeout 300 "→ "
             send "/quit\n"
             expect eof
@@ -66,8 +66,8 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITRAILS_MODEL: groq:moonshotai/kimi-k2-instruct
-          GITRAILS_FALLBACK_MODEL: groq:llama-3.3-70b-versatile
+          GITRAILS_MODEL: groq:llama-3.3-70b-versatile
+          GITRAILS_FALLBACK_MODEL: groq:moonshotai/kimi-k2-instruct
           GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}
           GITRAILS_REPO: ${{ github.repository }}
           PR_NUM: ${{ github.event.pull_request.number }}
