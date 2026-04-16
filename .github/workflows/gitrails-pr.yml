@@ -43,16 +43,6 @@ jobs:
           npx @open-gitagent/gitagent info 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
-      - name: "Create .env for gitclaw"
-        run: |
-          echo "GROQ_API_KEY=$GROQ_API_KEY" > .env
-          echo "GITRAILS_MODEL=$GITRAILS_MODEL" >> .env
-          echo "GITRAILS_FALLBACK_MODEL=$GITRAILS_FALLBACK_MODEL" >> .env
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GITRAILS_MODEL: groq:moonshotai/kimi-k2-instruct
-          GITRAILS_FALLBACK_MODEL: groq:llama-3.3-70b-versatile
-
       - name: "Install expect (PTY driver for gitclaw)"
         run: sudo apt-get install -y expect -qq
 
@@ -60,23 +50,11 @@ jobs:
         run: |
           echo "### Agent Scan Output" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          expect -f - << 'EXPECT' 2>&1 | tee /tmp/gitclaw-raw.txt | perl -pe 's/\e\[[0-9;?]*[a-zA-Z]//g; s/\r\n?/\n/g' | tee -a $GITHUB_STEP_SUMMARY
-            log_user 1
-            set timeout 120
-            set pr_num $env(PR_NUM)
-            spawn npx gitclaw --dir .
-            expect "\033\[32m\342\206\222 "
-            send "/review-pr\n"
-            expect -timeout 10 "\033\[32m\342\206\222 "
-            send "Run the full PR review pipeline now.\n"
-            expect -timeout 480 "\033\[32m\342\206\222 "
-            send "/quit\n"
-            expect -timeout 30 eof
-          EXPECT
+          { sleep 5; printf '/review-pr\n'; sleep 480; printf '/quit\n'; } \
+            | unbuffer -p npx gitclaw --dir . 2>&1 \
+            | perl -pe 's/\e\[[0-9;?]*[a-zA-Z]//g; s/\r\n?/\n/g' \
+            | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "--- raw output (bytes): $(wc -c < /tmp/gitclaw-raw.txt)"
-          echo "--- raw output (cat -v first 3000 chars):"
-          head -c 3000 /tmp/gitclaw-raw.txt | cat -v
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
