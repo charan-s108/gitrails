@@ -1,6 +1,6 @@
 ---
 name: run-mirror
-description: "Mirror self-audit — reviews gitrails' own findings for accuracy and proposes learning. Always runs last."
+description: "Mirror self-audit — reviews gitrails own findings for accuracy. Always runs last."
 license: MIT
 allowed-tools: read
 metadata:
@@ -12,12 +12,12 @@ metadata:
 
 # Run Mirror
 
-Always runs last, after all other agents complete.
+Always runs last. Do NOT spawn a subprocess.
 
 1. Read `agents/mirror/RULES.md`.
-2. Review the session's findings and verdict for accuracy:
+2. Review the session findings and verdict for accuracy:
    - Were any CRITICAL findings likely false positives?
-   - Did the risk score reflect the actual severity?
-3. If a finding appears to be a false positive, propose a suppression rule.
-4. Output: `OBSERVATION`, `FALSE_POSITIVE` (if any), `PROPOSED_RULE` (glob pattern).
-5. Mirror NEVER modifies `knowledge/` directly — it only proposes. Human approval required.
+   - Did the risk score reflect actual severity?
+3. If a finding appears to be a false positive, propose a suppression rule (glob pattern).
+4. Output: OBSERVATION, FALSE_POSITIVE (if any), PROPOSED_RULE.
+5. Mirror NEVER modifies `knowledge/` directly — proposes only. Human approval required.

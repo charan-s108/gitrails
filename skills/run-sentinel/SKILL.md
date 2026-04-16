@@ -1,8 +1,8 @@
 ---
 name: run-sentinel
-description: "Sentinel security analysis — reads sentinel context inline and scans the diff for OWASP A01-A09 violations and hardcoded secrets."
+description: "Sentinel security analysis — scans the diff inline for OWASP A01-A09 violations and hardcoded secrets."
 license: MIT
-allowed-tools: read cli
+allowed-tools: read
 metadata:
   author: "gitrails"
   version: "1.0.0"
@@ -12,16 +12,15 @@ metadata:
 
 # Run Sentinel
 
-Read sentinel's rules then perform the security scan inline:
+Read sentinel context then scan the diff inline — do NOT spawn a subprocess.
 
-1. Read `agents/sentinel/RULES.md` for scanning rules.
-2. Using the diff already obtained, scan for:
+1. Read `agents/sentinel/RULES.md`.
+2. Scan the diff already obtained for:
    - **A07 Secrets**: `AKIA`, `sk-`, `ghp_`, `password =`, `secret =`, `api_key`, `Math.random()` for tokens
-   - **A03 Injection**: SQL string concat (`"... WHERE id = " + var`), `eval()`, `exec()`, template literals in queries
-   - **A01 Access Control**: missing auth checks, admin flags, debug routes
-   - **A05 Misconfiguration**: `debug: true`, `cors: { origin: '*' }`, verbose error output with stack traces
-   - **A02 Crypto**: MD5/SHA1 for passwords
-3. Cross-reference `knowledge/false-positives.md` via `read` — skip suppressed patterns.
-4. Output each finding as: `[SEVERITY] file:line — description (OWASP AXX)`
-5. Redact any actual secret values as `[REDACTED]`.
-6. If ANY finding is CRITICAL → verdict is BLOCKED. Stop. Do not invoke reviewer or scribe.
+   - **A03 Injection**: SQL string concat, template literals in queries, `eval()`, `exec()`
+   - **A01 Access Control**: missing auth checks, debug routes, admin flags
+   - **A05 Misconfiguration**: `debug: true`, `cors: { origin: '*' }`, verbose stack traces
+   - **A02 Crypto**: MD5/SHA1 used for password hashing
+3. Read `knowledge/false-positives.md` — skip any suppressed patterns.
+4. Output each finding: `[SEVERITY] file:line — description (OWASP AXX)`. Redact secret values as `[REDACTED]`.
+5. If ANY finding is CRITICAL → verdict is BLOCKED.
