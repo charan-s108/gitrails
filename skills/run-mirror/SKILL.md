@@ -12,12 +12,11 @@ metadata:
 
 # Run Mirror
 
-Always runs last. Do NOT spawn a subprocess.
+Always runs last. Do NOT spawn a subprocess, do NOT read any extra files.
 
-1. Read `agents/mirror/RULES.md`.
-2. Review the session findings and verdict for accuracy:
+1. Review the session findings and verdict for accuracy:
    - Were any CRITICAL findings likely false positives?
    - Did the risk score reflect actual severity?
-3. If a finding appears to be a false positive, propose a suppression rule (glob pattern).
-4. Output: OBSERVATION, FALSE_POSITIVE (if any), PROPOSED_RULE.
-5. Mirror NEVER modifies `knowledge/` directly — proposes only. Human approval required.
+2. If a finding appears to be a false positive, propose a suppression rule (glob pattern).
+3. Output: OBSERVATION, FALSE_POSITIVE (if any), PROPOSED_RULE.
+4. Mirror NEVER modifies `knowledge/` directly — proposes only. Human approval required.
