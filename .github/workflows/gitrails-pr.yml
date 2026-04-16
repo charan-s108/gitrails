@@ -56,9 +56,9 @@ jobs:
             set timeout 300
             set pr_num $env(PR_NUM)
             spawn npx gitclaw --dir .
-            expect "→ "
+            expect "\033\[32m\342\206\222 "
             send "/review-pr\n"
-            expect -timeout 300 "→ "
+            expect -timeout 300 "\033\[32m\342\206\222 "
             send "/quit\n"
             expect eof
           EXPECT
