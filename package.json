@@ -7,7 +7,10 @@
     "validate": "npx @open-gitagent/gitagent validate",
     "info": "npx @open-gitagent/gitagent info",
     "start": "dotenv -e .env -- gitclaw --dir .",
-    "review": "dotenv -e .env -- gitclaw --dir . --prompt \"Review this PR for security vulnerabilities and code quality. Run sentinel, reviewer, scribe, and mirror.\""
+    "review": "dotenv -e .env -- gitclaw --dir . --prompt \"Review this PR for security vulnerabilities and code quality. Run sentinel, reviewer, scribe, and mirror.\" 2>&1 | perl -ne 'print unless /^(▶ |⚡|Task (started|completed|updated)|Compliance warn|gitrails v[0-9]|Model:|Tools:|Skills:|Agents:|Type \\/skills)/' | perl -0pe 's/\\n{3,}/\\n\\n/g'",
+    "demo:blocked": "dotenv -e .env -- gitclaw --dir . --prompt \"Scan ONLY scenarios/blocked/ — run: git diff origin/main...HEAD -- scenarios/blocked/ to get the diff. Run the full pipeline: sentinel, reviewer, scribe, mirror. Ignore all other changed files.\" 2>&1 | perl -ne 'print unless /^(▶ |⚡|Task (started|completed|updated)|Compliance warn|gitrails v[0-9]|Model:|Tools:|Skills:|Agents:|Type \\/skills)/' | perl -0pe 's/\\n{3,}/\\n\\n/g'",
+    "demo:needs-review": "dotenv -e .env -- gitclaw --dir . --prompt \"Scan ONLY scenarios/needs-review/ — run: git diff origin/main...HEAD -- scenarios/needs-review/ to get the diff. Run the full pipeline: sentinel, reviewer, scribe, mirror. Ignore all other changed files.\" 2>&1 | perl -ne 'print unless /^(▶ |⚡|Task (started|completed|updated)|Compliance warn|gitrails v[0-9]|Model:|Tools:|Skills:|Agents:|Type \\/skills)/' | perl -0pe 's/\\n{3,}/\\n\\n/g'",
+    "demo:clean": "dotenv -e .env -- gitclaw --dir . --prompt \"Scan ONLY scenarios/clean/ — run: git diff origin/main...HEAD -- scenarios/clean/ to get the diff. Run the full pipeline: sentinel, reviewer, scribe, mirror. Ignore all other changed files.\" 2>&1 | perl -ne 'print unless /^(▶ |⚡|Task (started|completed|updated)|Compliance warn|gitrails v[0-9]|Model:|Tools:|Skills:|Agents:|Type \\/skills)/' | perl -0pe 's/\\n{3,}/\\n\\n/g'"
   },
   "dependencies": {
     "gitclaw": "latest"
