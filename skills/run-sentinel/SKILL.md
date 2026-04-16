@@ -1,8 +1,8 @@
 ---
 name: run-sentinel
-description: "Invokes sentinel sub-agent via cli for deep OWASP A01-A09 security scan and secret detection."
+description: "Sentinel security analysis — scans the diff inline for OWASP A01-A09 violations and hardcoded secrets."
 license: MIT
-allowed-tools: read cli
+allowed-tools: read
 metadata:
   author: "gitrails"
   version: "1.0.0"
@@ -12,11 +12,15 @@ metadata:
 
 # Run Sentinel
 
-Use the `cli` tool to run this exact command:
+Read sentinel context then scan the diff inline — do NOT spawn a subprocess.
 
-```
-gitclaw --dir agents/sentinel -p "Scan the PR diff for OWASP A01-A09 vulnerabilities and hardcoded secrets. Report each finding as: finding_id, severity, owasp, file, line, description."
-```
-
-Collect output: list of `{ finding_id, severity, owasp, file, line, description }`.
-If any finding has `severity: CRITICAL` → set verdict BLOCKED immediately.
+1. Read `agents/sentinel/RULES.md`.
+2. Scan the diff already obtained for:
+   - **A07 Secrets**: `AKIA`, `sk-`, `ghp_`, `password =`, `secret =`, `api_key`, `Math.random()` for tokens
+   - **A03 Injection**: SQL string concat, template literals in queries, `eval()`, `exec()`
+   - **A01 Access Control**: missing auth checks, debug routes, admin flags
+   - **A05 Misconfiguration**: `debug: true`, `cors: { origin: '*' }`, verbose stack traces
+   - **A02 Crypto**: MD5/SHA1 used for password hashing
+3. Read `knowledge/false-positives.md` — skip any suppressed patterns.
+4. Output each finding: `[SEVERITY] file:line — description (OWASP AXX)`. Redact secret values as `[REDACTED]`.
+5. If ANY finding is CRITICAL → verdict is BLOCKED.
