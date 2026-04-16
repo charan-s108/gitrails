@@ -57,7 +57,7 @@ jobs:
             set pr_num $env(PR_NUM)
             spawn npx gitclaw --dir .
             expect "→ "
-            send "Review PR #$pr_num — scan for hardcoded secrets and OWASP vulnerabilities.\n"
+            send "/review-pr\n"
             expect -timeout 300 "→ "
             send "/quit\n"
             expect eof
