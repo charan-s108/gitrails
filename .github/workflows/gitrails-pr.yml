@@ -7,26 +7,15 @@ on:
       - "gitrails/session-**"
 
 jobs:
-  gitrails-review:
-    name: "gitrails — Security & Quality Review"
+  gitrails-validate:
+    name: "gitrails — Spec Validation"
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
-      checks: write
-    env:
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITRAILS_MODEL: groq:moonshotai/kimi-k2-instruct
-      GITRAILS_FALLBACK_MODEL: groq:llama-3.3-70b-versatile
-      GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}
-      GITRAILS_REPO: ${{ github.repository }}
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -35,7 +24,7 @@ jobs:
 
       - run: npm ci
 
-      - name: "gitrails — Validate spec"
+      - name: "gitrails — Validate & Info"
         run: |
           echo "## gitrails — PR #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`" >> $GITHUB_STEP_SUMMARY
@@ -49,17 +38,5 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           npx @open-gitagent/gitagent info 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-
-      - name: "gitrails — LLM smoke test"
-        run: |
-          npx gitclaw --dir . --prompt "Reply with exactly: OK" 2>&1 \
-            | perl -pe 's/\e\[[0-9;?]*[a-zA-Z]//g; s/\r\n?/\n/g'
-
-      - name: "gitrails — Full agent scan"
-        run: |
-          echo "### Agent Scan Output" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          npx gitclaw --dir . --prompt "Review this PR. Run the full pipeline: sentinel scans for OWASP vulnerabilities and secrets, reviewer scores code quality risk, scribe documents changed functions, mirror runs self-audit." 2>&1 \
-            | perl -pe 's/\e\[[0-9;?]*[a-zA-Z]//g; s/\r\n?/\n/g' \
-            | tee -a $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> AI scan runs locally via \`npm run review\` before pushing." >> $GITHUB_STEP_SUMMARY

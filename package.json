@@ -6,7 +6,8 @@
   "scripts": {
     "validate": "npx @open-gitagent/gitagent validate",
     "info": "npx @open-gitagent/gitagent info",
-    "start": "dotenv -e .env -- gitclaw --dir ."
+    "start": "dotenv -e .env -- gitclaw --dir .",
+    "review": "dotenv -e .env -- gitclaw --dir . --prompt \"Review this PR for security vulnerabilities and code quality. Run sentinel, reviewer, scribe, and mirror.\""
   },
   "dependencies": {
     "gitclaw": "latest"
