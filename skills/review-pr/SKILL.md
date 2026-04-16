@@ -12,8 +12,8 @@ metadata:
 
 # Review PR
 
-1. Run `git diff --stat origin/main...HEAD 2>/dev/null || git diff --stat HEAD~1` via `cli` to list changed files.
-2. Run `git diff origin/main...HEAD -- $(git diff --name-only origin/main...HEAD | grep -v '.yml' | head -5 | tr '\n' ' ') 2>/dev/null | head -c 6000` via `cli` to get a focused, truncated diff of non-workflow files only. Redact any secrets as `[REDACTED]`.
+1. Run `git diff --name-only origin/main...HEAD 2>/dev/null | grep -v '.yml'` via `cli` to list changed source files.
+2. Run `git diff origin/main...HEAD 2>/dev/null | head -c 3500` via `cli` to get a truncated diff. Redact any secrets as `[REDACTED]`.
 2. Run sentinel — read `skills/run-sentinel/SKILL.md` and invoke via `cli`.
 3. **GATE**: If sentinel returns ANY finding with `severity: CRITICAL` → verdict is **BLOCKED**. Output the verdict and STOP. Do NOT invoke reviewer, scribe, or mirror.
 4. If no CRITICAL findings → run reviewer — read `skills/run-reviewer/SKILL.md` and invoke via `cli`.
