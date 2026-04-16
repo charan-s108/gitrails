@@ -42,13 +42,30 @@ jobs:
           npx @open-gitagent/gitagent info 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
-      - name: "gitrails — Security & Quality Review"
-        run: node scripts/pr-scan.js --pr ${{ github.event.pull_request.number }} 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+      - name: "Install expect (PTY driver for gitclaw)"
+        run: sudo apt-get install -y expect -qq
+
+      - name: "gitrails — Full agent scan"
+        run: |
+          echo "### Agent Scan Output" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          expect -f - << 'EXPECT' 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+            log_user 1
+            set timeout 300
+            set pr_num $env(PR_NUM)
+            spawn npx gitclaw --dir .
+            expect "→ "
+            send "Review PR #$pr_num — scan for hardcoded secrets and OWASP vulnerabilities.\n"
+            expect -timeout 300 "→ "
+            send "/quit\n"
+            expect eof
+          EXPECT
+          echo '```' >> $GITHUB_STEP_SUMMARY
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITRAILS_MODEL_HEAVY: groq:moonshotai/kimi-k2-instruct
-          GITRAILS_MODEL_LIGHT: groq:llama-3.3-70b-versatile
+          GITRAILS_MODEL: groq:moonshotai/kimi-k2-instruct
+          GITRAILS_FALLBACK_MODEL: groq:llama-3.3-70b-versatile
           GITRAILS_PR_NUMBER: ${{ github.event.pull_request.number }}
           GITRAILS_REPO: ${{ github.repository }}
-          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUM: ${{ github.event.pull_request.number }}
