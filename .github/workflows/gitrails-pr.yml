@@ -10,6 +10,7 @@ jobs:
   gitrails-review:
     name: "gitrails — Security & Quality Review"
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
       pull-requests: write
@@ -53,12 +54,12 @@ jobs:
             | perl -pe 's/\e\[[0-9;?]*[a-zA-Z]//g; s/\r\n?/\n/g' \
             | tee -a $GITHUB_STEP_SUMMARY
             log_user 1
-            set timeout 300
+            set timeout 600
             set pr_num $env(PR_NUM)
             spawn npx gitclaw --dir .
             expect "\033\[32m\342\206\222 "
             send "/review-pr\n"
-            expect -timeout 300 "\033\[32m\342\206\222 "
+            expect -timeout 600 "\033\[32m\342\206\222 "
             send "/quit\n"
             expect eof
           EXPECT
