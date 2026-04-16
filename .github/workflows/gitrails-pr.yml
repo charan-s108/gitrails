@@ -67,7 +67,7 @@ jobs:
             spawn npx gitclaw --dir .
             expect "\033\[32m\342\206\222 "
             send "/review-pr\n"
-            expect -timeout 480 "\033\[32m\342\206\222 "
+            expect -timeout 60 "\033\[32m\342\206\222 "
             send "/quit\n"
             expect -timeout 30 eof
           EXPECT
