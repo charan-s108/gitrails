@@ -43,15 +43,11 @@ jobs:
           npx @open-gitagent/gitagent info 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
-      - name: "Install expect (PTY driver for gitclaw)"
-        run: sudo apt-get install -y expect -qq
-
       - name: "gitrails — Full agent scan"
         run: |
           echo "### Agent Scan Output" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          { sleep 5; printf '/review-pr\n'; sleep 480; printf '/quit\n'; } \
-            | unbuffer -p npx gitclaw --dir . 2>&1 \
+          npx gitclaw --dir . "Review this PR. Run the full pipeline: sentinel scans for OWASP vulnerabilities and secrets, reviewer scores code quality risk, scribe documents changed functions, mirror runs self-audit." 2>&1 \
             | perl -pe 's/\e\[[0-9;?]*[a-zA-Z]//g; s/\r\n?/\n/g' \
             | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
