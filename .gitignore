@@ -1,15 +1,20 @@
-# Secrets — never commit
+# Secrets
 .env
 
 # Dependencies
 node_modules/
 
-# Runtime state — cleared each session
+# Runtime state
 .gitagent/
+agents/**/.gitagent/
+agents/**/memory/
+agents/**/workspace/
+workspace/
 memory/runtime/context.md
 memory/runtime/dailylog.md
 
-# Cache
+# Retrieval cache
+knowledge/vector-index/
 .cache/
 
 # OS

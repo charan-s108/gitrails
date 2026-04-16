@@ -1,13 +1,18 @@
 ---
 name: review-pr
-description: "Entry point — runs git diff and scans for secrets, OWASP issues, and code quality problems."
+description: Entry point — runs git diff and scans for secrets, OWASP issues, and code quality problems.
 license: MIT
 allowed-tools: read cli
 metadata:
-  author: "gitrails"
-  version: "1.0.0"
-  category: "orchestration"
-  risk_tier: "standard"
+  author: gitrails
+  version: 1.0.0
+  category: orchestration
+  risk_tier: standard
+confidence: 1
+usage_count: 1
+success_count: 1
+failure_count: 0
+negative_examples: []
 ---
 
 # Review PR
